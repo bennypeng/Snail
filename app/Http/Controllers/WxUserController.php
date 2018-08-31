@@ -1,0 +1,199 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\WxUser;
+use WXBizDataCrypt;
+use GuzzleHttp\Client;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
+
+class WxUserController extends Controller
+{
+    protected $wxUserModel;
+
+    public function __construct()
+    {
+        $this->wxUserModel = new WxUser;
+    }
+
+    /**
+     * 用户登录
+     * @param Request $req
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function login(Request $req)
+    {
+
+        $jsCode        = $req->get('js_code', '');
+        $encryptedData = $req->get('encryptedData', '');
+        $iv            = $req->get('iv', '');
+        $sessionId     = $req->get('sessionId', '');
+        $signature     = $req->get('signature', '');
+        $rawData       = $req->get('rawData', '');
+
+        // 获取session_key 和 openId
+        $sessionData   = $this->_getSessionData($jsCode);
+
+        // 网络请求失败
+        if (!$sessionData)
+        {
+            return response()->json(Config::get('constants.NETWORK_ERROR'));
+        }
+
+        // 数据类型错误
+        if (!is_array($sessionData))
+        {
+            return response()->json(Config::get('constants.DATA_TYPE_ERROR'));
+        }
+
+        // 内部错误
+        if (isset($sessionData['errcode']) && $sessionData['errcode'])
+        {
+            Log::error('/api/login', $sessionData);
+            return response()->json(Config::get('constants.INTERNAL_ERROR'));
+        }
+
+        $openId     = $sessionData['openid'];
+        $sessionKey = $sessionData['session_key'];
+
+
+        // 数据签名校验
+        if ($signature != sha1($rawData . $sessionKey))
+        {
+            return response()->json(Config::get('constants.SIGNATURE_ERROR'));
+        }
+
+        // 判断sessionId的合法性
+        if ($sessionId && $sessionId != 'undefined')
+        {
+            $key = $this->wxUserModel->getUserSessionKey($sessionId);
+
+            if (\Redis::exists($key))
+            {
+                if (\Redis::hget($key, 'openId') != $openId)
+                {
+                    // openId不一致，需要重新登陆
+                    return response()->json(Config::get('constants.OPENID_ERROR'));
+                }
+            } else {
+                // sessionId已过期
+                return response()->json(Config::get('constants.SESSIONID_EXP_ERROR'));
+            }
+        } else {
+
+            $userData = $this->wxUserModel->getUserByOpenId($openId);
+
+            if (!$userData)
+            {
+                // 如果找不到该openId， 则进行注册
+                $pc = new WXBizDataCrypt(env('APPID'), $sessionKey);
+                $errCode = $pc->decryptData($encryptedData, $iv, $data );
+                if ($errCode == 0)
+                {
+                    $dataArr = json_decode($data, true);
+                    $userId = $this->wxUserModel->registerUser([
+                        'openId'    => $openId,
+                        'cId'       => '',
+                        'gender'    => $dataArr['gender'],
+                        'gender'    => $dataArr['gender'],
+                        'avatarUrl' => $dataArr['avatarUrl'],
+                        'language'  => $dataArr['language'],
+                        'nickName'  => $dataArr['nickName'],
+                        'country'   => $dataArr['country'],
+                        'province'  => $dataArr['province'],
+                        'city'      => $dataArr['city'],
+                    ]);
+                    // 注册成功， 则生成sessionId返回给客户端
+                    if ($userId)
+                    {
+                        $sessionId = $this->_3rd_session(16);
+                        $key       = $this->wxUserModel->getUserSessionKey($sessionId);
+                        $this->wxUserModel->setUserSessionKey($key, [
+                            'openId'      => $openId,
+                            'session_key' => $sessionKey,
+                            'userId'      => $userId
+                        ]);
+                    } else {
+                        // 注册失败
+                        return response()->json(Config::get('constants.REG_ERROR'));
+                    }
+                } else {
+                    // 解密失败
+                    return response()->json(Config::get('constants.DECODE_ERROR'));
+                }
+            } else {
+                // 如果能找到openId， 则进行生成sessionId
+                $sessionId = $this->_3rd_session(16);
+                $key       = $this->wxUserModel->getUserSessionKey($sessionId);
+                $this->wxUserModel->setUserSessionKey($key, [
+                    'openId'      => $openId,
+                    'session_key' => $sessionKey,
+                    'userId'      => $userData['id']
+                ]);
+            }
+        }
+
+        return response()->json(
+            array_merge(
+                array('sessionId' => $sessionId),
+                Config::get('constants.SUCCESS')
+            )
+        );
+    }
+
+    /**
+     * 通过js_code获取 session_key 和 openid
+     * @param string $jsCode
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function _getSessionData($jsCode = '') {
+
+        $client = new Client;
+        $resp = $client->request('GET', 'https://api.weixin.qq.com/sns/jscode2session', [
+            'headers' => [
+                'Content-Type' => 'application/json; charset=utf-8'
+            ],
+            'query' => [
+                'appid' => env('APPID'),
+                'secret' => env('APPSECRET'),
+                'js_code' => $jsCode,
+                'grant_type' => 'authorization_code'
+            ]
+        ]);
+
+        if ($resp->getStatusCode() == 200) {
+            $resArr = json_decode($resp->getBody(), true);
+            return $resArr;
+        }
+
+        return false;
+    }
+
+    /**
+     * 生成3rd_session
+     * @param $len
+     * @return bool|string
+     */
+    private function _3rd_session($len)
+    {
+        $result = '';
+        $fp = @fopen('/dev/urandom', 'rb');
+
+        if ($fp !== FALSE)
+        {
+            $result .= @fread($fp, $len);
+            @fclose($fp);
+        } else {
+            Log::error('Can not open /dev/urandom.');
+            return false;
+        }
+
+        $result = strtr(base64_encode($result), '+/', '-_');
+
+        return substr($result, 0, $len);
+    }
+}
