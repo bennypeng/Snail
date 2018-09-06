@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\WxUser;
+use App\UserBag;
+use App\ShopBuff;
 use WXBizDataCrypt;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -12,10 +14,14 @@ use Illuminate\Support\Facades\Log;
 class WxUserController extends Controller
 {
     protected $wxUserModel;
+    protected $userBagModel;
+    protected $shopModel;
 
     public function __construct()
     {
-        $this->wxUserModel = new WxUser;
+        $this->wxUserModel  = new WxUser;
+        $this->userBagModel = new UserBag;
+        $this->shopModel    = new ShopBuff;
     }
 
     /**
@@ -69,7 +75,7 @@ class WxUserController extends Controller
         // 判断sessionId的合法性
         if ($sessionId && $sessionId != 'undefined')
         {
-            $key = $this->wxUserModel->getUserSessionKey($sessionId);
+            $key = $this->wxUserModel->getUserSessionIdKey($sessionId);
 
             if (\Redis::exists($key))
             {
@@ -110,12 +116,18 @@ class WxUserController extends Controller
                     if ($userId)
                     {
                         $sessionId = $this->_3rd_session(16);
-                        $key       = $this->wxUserModel->getUserSessionKey($sessionId);
-                        $this->wxUserModel->setUserSessionKey($key, [
+                        $key       = $this->wxUserModel->getUserSessionIdKey($sessionId);
+                        $this->wxUserModel->setUserSessionId($key, [
                             'openId'      => $openId,
                             'session_key' => $sessionKey,
                             'userId'      => $userId
                         ]);
+
+                        // 初始化背包
+                        $this->userBagModel->initBags($userId);
+
+                        Log::info('创建用户成功，userId:' . $userId);
+
                     } else {
                         // 注册失败
                         return response()->json(Config::get('constants.REG_ERROR'));
@@ -127,8 +139,8 @@ class WxUserController extends Controller
             } else {
                 // 如果能找到openId， 则进行生成sessionId
                 $sessionId = $this->_3rd_session(16);
-                $key       = $this->wxUserModel->getUserSessionKey($sessionId);
-                $this->wxUserModel->setUserSessionKey($key, [
+                $key       = $this->wxUserModel->getUserSessionIdKey($sessionId);
+                $this->wxUserModel->setUserSessionId($key, [
                     'openId'      => $openId,
                     'session_key' => $sessionKey,
                     'userId'      => $userData['id']
@@ -136,9 +148,23 @@ class WxUserController extends Controller
             }
         }
 
+        $userId      = $this->wxUserModel->getUserIdBySessionId($sessionId);
+        $offlineGold = $this->shopModel->settleBuffOfflineGold($userId);
+        $userBags    = $this->userBagModel->getUserBag($userId, true);
+        $userBuff    = $this->shopModel->getUserBuff($userId);
+
+        unset($userBags['id']);
+
+        $userBags['snailMap'] = array_values($userBags['snailMap']);
+
         return response()->json(
             array_merge(
-                array('sessionId' => $sessionId),
+                array(
+                    'sessionId'   => $sessionId,
+                    'offlineGold' => $offlineGold,
+                    'userBags'    => $userBags,
+                    'userBuff'    => $userBuff
+                ),
                 Config::get('constants.SUCCESS')
             )
         );

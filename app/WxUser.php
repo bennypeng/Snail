@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class WxUser extends Model
@@ -58,22 +59,46 @@ class WxUser extends Model
 
         if (!$userInfo) return array();
 
-        \Redis::hmset($openId, $userInfo);
+        \Redis::hmset($openId, $userInfo->toArray());
 
         return $userInfo;
     }
 
-    function setUserSessionKey($key, $data = [])
+    /**
+     * 通过sessionId获取userId
+     * @param string $sessionId
+     * @return bool|string
+     */
+    function getUserIdBySessionId($sessionId = '')
     {
+        if (!$sessionId) return false;
+
+        $sessionIdKey = $this->getUserSessionIdKey($sessionId);
+
+        if (!\Redis::exists($sessionIdKey)) return false;
+
+        $userId = \Redis::hget($sessionIdKey, 'userId');
+
+        if (!$userId) return false;
+
+        return $userId;
+    }
+
+    function setUserSessionId($key, $data = [])
+    {
+        return true;
         if (!$key || !$data) return false;
+
         \Redis::hmset($key, $data);
-        \Redis::expire($key, 86400 * 30);
+
+        \Redis::expire($key, Carbon::parse('+30 days')->startOfDay()->timestamp);
+
         return true;
     }
 
-    function getUserSessionKey($sessionId = '')
+    function getUserSessionIdKey($sessionId = '')
     {
-        return 'SKEY_' . $sessionId;
+        return 'SID_' . $sessionId;
     }
 
 

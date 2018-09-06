@@ -13,7 +13,26 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('login', 'WxUserController@login');
+//  需要带上sessionId
+Route::group(['middleware' => 'skey'], function() {
+
+    //  查看每日奖励
+    Route::get('conf/daily', 'ConfigController@getDailyConf');
+
+    //  领取每日奖励
+    Route::get('conf/daily/{day}', 'ConfigController@getDailyAward')->where('day', '[1-7]');
+
+    //  查看商店配置
+    Route::get('conf/shop', 'ConfigController@getBuffShopConf');
+
+    //  购买商品
+    Route::get('conf/shop/{goodId}', 'ConfigController@buyBuff');
+
+
+});
+
+//  登录授权
+Route::post('user/login', 'WxUserController@login');
 
 //  错误返回
 Route::fallback(function (){
