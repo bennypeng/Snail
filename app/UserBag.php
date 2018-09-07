@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class UserBag extends Model
 {
@@ -23,7 +24,7 @@ class UserBag extends Model
             'userId' => $userId,
             'gold' => 0,
             'diamond' => 0,
-            'snailNums' => 1,
+            //'snailNums' => 1,
             'item_1' => '[1, 0]',
             'item_2' => '[]', 'item_3' => '[]', 'item_4' => '[]', 'item_5' => '[]',
             'item_6' => '[]', 'item_7' => '[]', 'item_8' => '[]', 'item_9' => '[]',
@@ -86,7 +87,10 @@ class UserBag extends Model
             }
 
             $userBag['snailMap'] = $snailData;
+
         }
+
+        unset($userBag['id']);
 
         return $userBag;
     }

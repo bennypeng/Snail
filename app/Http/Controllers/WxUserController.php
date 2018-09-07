@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\WxUser;
 use App\UserBag;
 use App\ShopBuff;
+use App\Snail;
 use WXBizDataCrypt;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -16,12 +17,14 @@ class WxUserController extends Controller
     protected $wxUserModel;
     protected $userBagModel;
     protected $shopModel;
+    protected $snailModel;
 
     public function __construct()
     {
         $this->wxUserModel  = new WxUser;
         $this->userBagModel = new UserBag;
         $this->shopModel    = new ShopBuff;
+        $this->snailModel   = new Snail;
     }
 
     /**
@@ -148,22 +151,22 @@ class WxUserController extends Controller
             }
         }
 
-        $userId      = $this->wxUserModel->getUserIdBySessionId($sessionId);
-        $offlineGold = $this->shopModel->settleBuffOfflineGold($userId);
-        $userBags    = $this->userBagModel->getUserBag($userId, true);
-        $userBuff    = $this->shopModel->getUserBuff($userId);
-
-        unset($userBags['id']);
+        $userId          = $this->wxUserModel->getUserIdBySessionId($sessionId);
+        $offlineGold     = $this->shopModel->settleBuffOfflineGold($userId);
+        $userBags        = $this->userBagModel->getUserBag($userId, true);
+        $userBuff        = $this->shopModel->getUserBuff($userId);
+        $snailEarnPerSec = $this->snailModel->calcSnailEarn($userBags['snailMap']);
 
         $userBags['snailMap'] = array_values($userBags['snailMap']);
 
         return response()->json(
             array_merge(
                 array(
-                    'sessionId'   => $sessionId,
-                    'offlineGold' => $offlineGold,
-                    'userBags'    => $userBags,
-                    'userBuff'    => $userBuff
+                    'sessionId'       => $sessionId,
+                    'offlineGold'     => $offlineGold,
+                    'snailEarnPerSec' => $snailEarnPerSec,
+                    'userBags'        => $userBags,
+                    'userBuff'        => $userBuff,
                 ),
                 Config::get('constants.SUCCESS')
             )

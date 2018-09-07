@@ -253,6 +253,44 @@ class ShopBuff extends Model
         return true;
     }
 
+    /**
+     * 获取用户今日分享得BUFF的次数
+     * @param string $userId
+     * @return bool|string
+     */
+    public function getUserShopShareNums($userId = '')
+    {
+        if (!$userId) return false;
+
+        $key = $this->_getUserShopShareNumsKey($userId);
+
+        if (!\Redis::exists($key))
+        {
+            \Redis::set($key, 0);
+
+            \Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+        }
+
+        return \Redis::get($key);
+    }
+
+
+    /**
+     * 增加用户今日分享得BUFF的次数
+     * @param string $userId
+     * @return bool
+     */
+    public function incrUserShopShareNums($userId= '')
+    {
+        if (!$userId) return false;
+
+        $key = $this->_getUserShopShareNumsKey($userId);
+
+        \Redis::incrby($key, 1);
+
+        return true;
+    }
+
     private function _getBuffShopKey()
     {
         return 'CONFIG_BUFF_SHOP';
@@ -261,5 +299,10 @@ class ShopBuff extends Model
     private function _getBuffKey()
     {
         return 'USER_BUFF';
+    }
+
+    private function _getUserShopShareNumsKey($userId = '')
+    {
+        return 'U_BUFF_SHARE_NUMS_' . $userId;
     }
 }

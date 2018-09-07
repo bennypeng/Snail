@@ -18,7 +18,7 @@ class CreateUsersBagsTable extends Migration
             $table->integer('userId')->unsigned()->comment('用户ID');
             $table->string('gold', 100)->default('0')->comment('金币数量');
             $table->integer('diamond')->unsigned()->default(0)->comment('钻石数量');
-            $table->integer('snailNums')->unsigned()->default(0)->comment('蜗牛数量');
+            //$table->integer('snailNums')->unsigned()->default(0)->comment('蜗牛数量');
             $table->string('item_1', 30)->default('[]');
             $table->string('item_2', 30)->default('[]');
             $table->string('item_3', 30)->default('[]');

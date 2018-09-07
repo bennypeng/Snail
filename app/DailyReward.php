@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class DailyReward extends Model
 {
@@ -121,39 +122,38 @@ class DailyReward extends Model
     }
 
     /**
-     * 设置用户签到次数
+     * 获取用户签到状态
      * @param string $userId
      * @return bool|int|string
      */
-    public function getUserDailyNums($userId = '')
+    public function getUserDailyStatus($userId = '')
     {
         if (!$userId) return false;
 
-        $key = $this->_getUserDailyNumsKey($userId);
+        $key = $this->_getUserDailyCheckKey($userId);
 
-        if (!\Redis::exists($key)) return 0;
+        if (!\Redis::exists($key)) {
+
+            \Redis::set($key, 0);
+
+            \Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+        }
 
         return \Redis::get($key);
     }
 
     /**
-     * 获取用户签到次数
+     * 设置签到状态
      * @param string $userId
      * @return bool
      */
-    public function setUserDailyNums($userId = '')
+    public function setUserDailyStatus($userId = '')
     {
         if (!$userId) return false;
 
-        $ukey = $this->_getUserDailyRewardKey($userId);
+        $key = $this->_getUserDailyCheckKey($userId);
 
-        $key = $this->_getUserDailyNumsKey($userId);
-
-        $ttl = \Redis::ttl($ukey);
-
-        \Redis::incr($key);
-
-        \Redis::expire($key, $ttl);
+        \Redis::set($key, 1);
 
         return true;
     }
@@ -169,8 +169,10 @@ class DailyReward extends Model
         return 'CONFIG_DAILY_REWARDS';
     }
 
-    private function _getUserDailyNumsKey($userId = '')
+    private function _getUserDailyCheckKey($userId = '')
     {
-        return 'DR_NUMS_' . $userId;
+        return 'DR_CHECK_' . $userId;
     }
+
+
 }

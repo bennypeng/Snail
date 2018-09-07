@@ -20,15 +20,30 @@ Route::group(['middleware' => 'skey'], function() {
     Route::get('conf/daily', 'ConfigController@getDailyConf');
 
     //  领取每日奖励
-    Route::get('conf/daily/{day}', 'ConfigController@getDailyAward')->where('day', '[1-7]');
+    Route::post('conf/daily/{day}', 'ConfigController@getDailyAward')
+        ->where('day', '[1-7]');
 
     //  查看商店配置
     Route::get('conf/shop', 'ConfigController@getBuffShopConf');
 
     //  购买商品
-    Route::get('conf/shop/{goodId}', 'ConfigController@buyBuff');
+    Route::post('conf/shop/{goodId}', 'ConfigController@buyBuff')
+        ->where('goodId', '[1-6]');
 
+    //  蜗牛购买列表
+    Route::get('snail/list', 'SnailController@list');
 
+    //  合成蜗牛
+    Route::post('snail/level', 'SnailController@combine');
+
+    //  购买蜗牛
+    Route::post('snail/buy', 'SnailController@buy');
+
+    //  蜗牛上/下阵
+    Route::post('snail/join', 'SnailController@join');
+
+    //  回收蜗牛
+    Route::post('snail/recly', 'SnailController@recly');
 });
 
 //  登录授权
