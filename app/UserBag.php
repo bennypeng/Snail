@@ -68,6 +68,8 @@ class UserBag extends Model
             $userBag = Redis::hgetall($key);
         }
 
+        $userBag['snailMap'] = [];
+
         // 解析蜗牛数据
         if ($parseItem)
         {
