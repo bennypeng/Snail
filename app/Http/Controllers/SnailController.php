@@ -6,7 +6,6 @@ use App\UserBag;
 use App\Snail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 
 class SnailController extends Controller
 {

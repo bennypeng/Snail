@@ -2,10 +2,9 @@
 
 namespace App;
 
-use \App\UserBag;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Tests\Models\User;
+use Illuminate\Support\Facades\Redis;
 
 class Snail extends Model
 {
@@ -22,7 +21,7 @@ class Snail extends Model
     {
         $key = $this->_getSnailConfKey();
 
-        if (!\Redis::exists($key)) {
+        if (!Redis::exists($key)) {
             $snailConfigObj = Snail::where('id', '<=', 24)
                 ->orderBy('id', 'asc')
                 ->take(24)
@@ -36,12 +35,12 @@ class Snail extends Model
                 $v = json_encode($v);
             }
 
-            \Redis::hmset($key, $snailConfig);
+            Redis::hmset($key, $snailConfig);
         }
 
         unset($v);
 
-        $snailConfig = \Redis::hgetall($key);
+        $snailConfig = Redis::hgetall($key);
 
         foreach($snailConfig as $k => &$v) {
             $v = json_decode($v, true);
@@ -230,12 +229,12 @@ class Snail extends Model
 
         $key = $this->_getUserSnailBuyNumsKey($userId);
 
-        if (!\Redis::exists($key))
+        if (!Redis::exists($key))
         {
-            \Redis::hmset($key, array_fill(1,24,1));
+            Redis::hmset($key, array_fill(1,24,1));
         }
 
-        return \Redis::hgetall($key);
+        return Redis::hgetall($key);
     }
 
     /**
@@ -250,7 +249,7 @@ class Snail extends Model
 
         $key = $this->_getUserSnailBuyNumsKey($userId);
 
-        \Redis::hincrby($key, $snailId, 1);
+        Redis::hincrby($key, $snailId, 1);
 
         return true;
     }
@@ -266,9 +265,9 @@ class Snail extends Model
 
         $key = $this->_getUserMaxSnailKey($userId);
 
-        if (!\Redis::exists($key))
+        if (!Redis::exists($key))
         {
-            $userBagModel = new UserBag;
+            $userBagModel = new \App\UserBag;
 
             $userBag = $userBagModel->getUserBag($userId, true);
 
@@ -280,10 +279,10 @@ class Snail extends Model
 
             rsort($data);
 
-            \Redis::set($key, $data[0]);
+            Redis::set($key, $data[0]);
         }
 
-        return \Redis::get($key);
+        return Redis::get($key);
     }
 
     /**
@@ -297,7 +296,7 @@ class Snail extends Model
 
         $key = $this->_getUserMaxSnailKey($userId);
 
-        \Redis::incr($key);
+        Redis::incr($key);
 
         return true;
     }
@@ -313,14 +312,14 @@ class Snail extends Model
 
         $key = $this->_getUserSnailVedioNumsKey($userId);
 
-        if (!\Redis::exists($key))
+        if (!Redis::exists($key))
         {
-            \Redis::set($key, 0);
+            Redis::set($key, 0);
 
-            \Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+            Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
         }
 
-        return \Redis::get($key);
+        return Redis::get($key);
     }
 
 
@@ -335,7 +334,7 @@ class Snail extends Model
 
         $key = $this->_getUserSnailVedioNumsKey($userId);
 
-        \Redis::incrby($key, 1);
+        Redis::incrby($key, 1);
 
         return true;
     }

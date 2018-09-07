@@ -5,7 +5,7 @@
 
 namespace {
 
-    //exit("This file should not be included, only analyzed by your IDE" . PHP_EOL);
+    exit("This file should not be included, only analyzed by your IDE" . PHP_EOL);
 
     /**
      * @method static int    del( array $keys )

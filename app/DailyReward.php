@@ -4,7 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class DailyReward extends Model
 {
@@ -24,7 +24,7 @@ class DailyReward extends Model
 
         $key = $this->_getUserDailyRewardKey($userId);
 
-        if (!\Redis::exists($key))
+        if (!Redis::exists($key))
         {
             $dailyConfig = $this->getDailyRewardsConf();
 
@@ -41,12 +41,12 @@ class DailyReward extends Model
                 ]);
             }
 
-            \Redis::hmset($key, $userDaily);
+            Redis::hmset($key, $userDaily);
 
-            \Redis::expireat($key, Carbon::parse('+7 days')->startOfDay()->timestamp);
+            Redis::expireat($key, Carbon::parse('+7 days')->startOfDay()->timestamp);
 
         } else {
-            $userDaily = \Redis::hgetall($key);
+            $userDaily = Redis::hgetall($key);
         }
 
         if ($userDaily)
@@ -71,7 +71,7 @@ class DailyReward extends Model
     {
         $key = $this->_getDailyRewardKey();
 
-        if (!\Redis::exists($key))
+        if (!Redis::exists($key))
         {
             $dailyConfigObj = DailyReward::where('day', '<=', 7)
                 ->orderBy('day', 'asc')
@@ -86,13 +86,13 @@ class DailyReward extends Model
                 $v = json_encode($v);
             }
 
-            \Redis::hmset($key, $dailyConfig);
+            Redis::hmset($key, $dailyConfig);
 
         }
 
         unset($v);
 
-        $dailyConfig = \Redis::hgetall($key);
+        $dailyConfig = Redis::hgetall($key);
 
         foreach($dailyConfig as $k => &$v) {
             $v = json_decode($v, true);
@@ -116,7 +116,7 @@ class DailyReward extends Model
 
         $key = $this->_getUserDailyRewardKey($userId);
 
-        \Redis::hset($key, $day, json_encode($data));
+        Redis::hset($key, $day, json_encode($data));
 
         return true;
     }
@@ -132,14 +132,14 @@ class DailyReward extends Model
 
         $key = $this->_getUserDailyCheckKey($userId);
 
-        if (!\Redis::exists($key)) {
+        if (!Redis::exists($key)) {
 
-            \Redis::set($key, 0);
+            Redis::set($key, 0);
 
-            \Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+            Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
         }
 
-        return \Redis::get($key);
+        return Redis::get($key);
     }
 
     /**
@@ -153,7 +153,7 @@ class DailyReward extends Model
 
         $key = $this->_getUserDailyCheckKey($userId);
 
-        \Redis::set($key, 1);
+        Redis::set($key, 1);
 
         return true;
     }

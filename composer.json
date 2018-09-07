@@ -40,7 +40,7 @@
             "App\\": "app/"
         },
         "files": [
-            "app/IdeHelpers/_ide_helper_redis.php"
+
         ]
     },
     "autoload-dev": {

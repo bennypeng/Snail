@@ -11,6 +11,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 
 class WxUserController extends Controller
 {
@@ -80,9 +81,9 @@ class WxUserController extends Controller
         {
             $key = $this->wxUserModel->getUserSessionIdKey($sessionId);
 
-            if (\Redis::exists($key))
+            if (Redis::exists($key))
             {
-                if (\Redis::hget($key, 'openId') != $openId)
+                if (Redis::hget($key, 'openId') != $openId)
                 {
                     // openId不一致，需要重新登陆
                     return response()->json(Config::get('constants.OPENID_ERROR'));

@@ -8,7 +8,6 @@ use App\ShopBuff;
 use App\Snail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Log;
 
 class ConfigController extends Controller
 {

@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 
 class WxUser extends Model
 {
@@ -33,7 +34,7 @@ class WxUser extends Model
 
         if ($userId)
         {
-            \Redis::hmset($data['openId'], $data);
+            Redis::hmset($data['openId'], $data);
             return $userId;
         }
 
@@ -50,16 +51,16 @@ class WxUser extends Model
 
         if (!$openId) return array();
 
-        if (\Redis::exists($openId))
+        if (Redis::exists($openId))
         {
-            return \Redis::hgetall($openId);
+            return Redis::hgetall($openId);
         }
 
         $userInfo = WxUser::where('openId', $openId)->first();
 
         if (!$userInfo) return array();
 
-        \Redis::hmset($openId, $userInfo->toArray());
+        Redis::hmset($openId, $userInfo->toArray());
 
         return $userInfo;
     }
@@ -75,9 +76,9 @@ class WxUser extends Model
 
         $sessionIdKey = $this->getUserSessionIdKey($sessionId);
 
-        if (!\Redis::exists($sessionIdKey)) return false;
+        if (!Redis::exists($sessionIdKey)) return false;
 
-        $userId = \Redis::hget($sessionIdKey, 'userId');
+        $userId = Redis::hget($sessionIdKey, 'userId');
 
         if (!$userId) return false;
 
@@ -89,9 +90,9 @@ class WxUser extends Model
         return true;
         if (!$key || !$data) return false;
 
-        \Redis::hmset($key, $data);
+        Redis::hmset($key, $data);
 
-        \Redis::expire($key, Carbon::parse('+30 days')->startOfDay()->timestamp);
+        Redis::expire($key, Carbon::parse('+30 days')->startOfDay()->timestamp);
 
         return true;
     }

@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Redis;
 
 class ShopBuff extends Model
 {
@@ -19,7 +20,7 @@ class ShopBuff extends Model
     {
         $key = $this->_getBuffShopKey();
 
-        if (!\Redis::exists($key))
+        if (!Redis::exists($key))
         {
             $shopConfigObj = ShopBuff::where('id', '<=', 6)
                 ->orderBy('id', 'asc')
@@ -34,12 +35,12 @@ class ShopBuff extends Model
                 $v = json_encode($v);
             }
 
-            \Redis::hmset($key, $shopConfig);
+            Redis::hmset($key, $shopConfig);
         }
 
         unset($v);
 
-        $shopConfig = \Redis::hgetall($key);
+        $shopConfig = Redis::hgetall($key);
 
         foreach($shopConfig as $k => &$v) {
             $v = json_decode($v, true);
@@ -147,7 +148,7 @@ class ShopBuff extends Model
 
             $key = $this->_getBuffKey();
 
-            \Redis::hset($key, $userId, json_encode($userBuffData));
+            Redis::hset($key, $userId, json_encode($userBuffData));
         }
 
         return $earnGold;
@@ -164,14 +165,14 @@ class ShopBuff extends Model
 
         $key = $this->_getBuffKey();
 
-        if (!\Redis::hexists($key, $userId))
+        if (!Redis::hexists($key, $userId))
         {
             return array();
         }
 
         $userBuffData = [];
 
-        $userBuff = \Redis::hget($key, $userId);
+        $userBuff = Redis::hget($key, $userId);
 
         $userBuff = json_decode($userBuff, true);
 
@@ -208,9 +209,9 @@ class ShopBuff extends Model
         $expTs = Carbon::now()->addSecond($timeSec)->timestamp;
 
         // 如果用户购买过buff
-        if (\Redis::hexists($key, $userId))
+        if (Redis::hexists($key, $userId))
         {
-            $userBuffJson = \Redis::hget($key, $userId);
+            $userBuffJson = Redis::hget($key, $userId);
 
             $userBuff     = json_decode($userBuffJson, true);
 
@@ -248,7 +249,7 @@ class ShopBuff extends Model
             $userBuff[$buffType] = $curTime . '_' . $expTs . '_' . $curTime;
         }
 
-        \Redis::hset($key, $userId, json_encode($userBuff));
+        Redis::hset($key, $userId, json_encode($userBuff));
 
         return true;
     }
@@ -264,14 +265,14 @@ class ShopBuff extends Model
 
         $key = $this->_getUserShopShareNumsKey($userId);
 
-        if (!\Redis::exists($key))
+        if (!Redis::exists($key))
         {
-            \Redis::set($key, 0);
+            Redis::set($key, 0);
 
-            \Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+            Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
         }
 
-        return \Redis::get($key);
+        return Redis::get($key);
     }
 
 
@@ -286,7 +287,7 @@ class ShopBuff extends Model
 
         $key = $this->_getUserShopShareNumsKey($userId);
 
-        \Redis::incrby($key, 1);
+        Redis::incrby($key, 1);
 
         return true;
     }
