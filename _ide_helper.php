@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.5.40 on 2018-08-02 11:05:48.
+ * Generated for Laravel 5.5.40 on 2018-09-07 21:28:09.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -3482,16 +3482,6 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getDriverName()
-        {
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getDriverName();
-        }
-        
-        /**
          * Get a schema builder instance for the connection.
          *
          * @return \Illuminate\Database\Schema\MySqlBuilder 
@@ -3499,8 +3489,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function getSchemaBuilder()
         {
-            //Method inherited from \Illuminate\Database\MySqlConnection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getSchemaBuilder();
+            return \Illuminate\Database\MySqlConnection::getSchemaBuilder();
         }
         
         /**
@@ -3513,8 +3502,7 @@ namespace Illuminate\Support\Facades {
          */ 
         public static function bindValues($statement, $bindings)
         {
-            //Method inherited from \Illuminate\Database\MySqlConnection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::bindValues($statement, $bindings);
+            \Illuminate\Database\MySqlConnection::bindValues($statement, $bindings);
         }
         
         /**
@@ -3526,7 +3514,7 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultQueryGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::useDefaultQueryGrammar();
+            \Illuminate\Database\MySqlConnection::useDefaultQueryGrammar();
         }
         
         /**
@@ -3538,7 +3526,7 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultSchemaGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::useDefaultSchemaGrammar();
+            \Illuminate\Database\MySqlConnection::useDefaultSchemaGrammar();
         }
         
         /**
@@ -3550,7 +3538,7 @@ namespace Illuminate\Support\Facades {
         public static function useDefaultPostProcessor()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::useDefaultPostProcessor();
+            \Illuminate\Database\MySqlConnection::useDefaultPostProcessor();
         }
         
         /**
@@ -3563,7 +3551,7 @@ namespace Illuminate\Support\Facades {
         public static function table($table)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::table($table);
+            return \Illuminate\Database\MySqlConnection::table($table);
         }
         
         /**
@@ -3575,7 +3563,7 @@ namespace Illuminate\Support\Facades {
         public static function query()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::query();
+            return \Illuminate\Database\MySqlConnection::query();
         }
         
         /**
@@ -3590,7 +3578,7 @@ namespace Illuminate\Support\Facades {
         public static function selectOne($query, $bindings = array(), $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::selectOne($query, $bindings, $useReadPdo);
+            return \Illuminate\Database\MySqlConnection::selectOne($query, $bindings, $useReadPdo);
         }
         
         /**
@@ -3604,7 +3592,7 @@ namespace Illuminate\Support\Facades {
         public static function selectFromWriteConnection($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::selectFromWriteConnection($query, $bindings);
+            return \Illuminate\Database\MySqlConnection::selectFromWriteConnection($query, $bindings);
         }
         
         /**
@@ -3619,7 +3607,7 @@ namespace Illuminate\Support\Facades {
         public static function select($query, $bindings = array(), $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::select($query, $bindings, $useReadPdo);
+            return \Illuminate\Database\MySqlConnection::select($query, $bindings, $useReadPdo);
         }
         
         /**
@@ -3634,7 +3622,7 @@ namespace Illuminate\Support\Facades {
         public static function cursor($query, $bindings = array(), $useReadPdo = true)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::cursor($query, $bindings, $useReadPdo);
+            return \Illuminate\Database\MySqlConnection::cursor($query, $bindings, $useReadPdo);
         }
         
         /**
@@ -3648,7 +3636,7 @@ namespace Illuminate\Support\Facades {
         public static function insert($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::insert($query, $bindings);
+            return \Illuminate\Database\MySqlConnection::insert($query, $bindings);
         }
         
         /**
@@ -3662,7 +3650,7 @@ namespace Illuminate\Support\Facades {
         public static function update($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::update($query, $bindings);
+            return \Illuminate\Database\MySqlConnection::update($query, $bindings);
         }
         
         /**
@@ -3676,7 +3664,7 @@ namespace Illuminate\Support\Facades {
         public static function delete($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::delete($query, $bindings);
+            return \Illuminate\Database\MySqlConnection::delete($query, $bindings);
         }
         
         /**
@@ -3690,7 +3678,7 @@ namespace Illuminate\Support\Facades {
         public static function statement($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::statement($query, $bindings);
+            return \Illuminate\Database\MySqlConnection::statement($query, $bindings);
         }
         
         /**
@@ -3704,7 +3692,7 @@ namespace Illuminate\Support\Facades {
         public static function affectingStatement($query, $bindings = array())
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::affectingStatement($query, $bindings);
+            return \Illuminate\Database\MySqlConnection::affectingStatement($query, $bindings);
         }
         
         /**
@@ -3717,7 +3705,7 @@ namespace Illuminate\Support\Facades {
         public static function unprepared($query)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::unprepared($query);
+            return \Illuminate\Database\MySqlConnection::unprepared($query);
         }
         
         /**
@@ -3730,7 +3718,7 @@ namespace Illuminate\Support\Facades {
         public static function pretend($callback)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::pretend($callback);
+            return \Illuminate\Database\MySqlConnection::pretend($callback);
         }
         
         /**
@@ -3743,7 +3731,7 @@ namespace Illuminate\Support\Facades {
         public static function prepareBindings($bindings)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::prepareBindings($bindings);
+            return \Illuminate\Database\MySqlConnection::prepareBindings($bindings);
         }
         
         /**
@@ -3758,7 +3746,7 @@ namespace Illuminate\Support\Facades {
         public static function logQuery($query, $bindings, $time = null)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::logQuery($query, $bindings, $time);
+            \Illuminate\Database\MySqlConnection::logQuery($query, $bindings, $time);
         }
         
         /**
@@ -3771,7 +3759,7 @@ namespace Illuminate\Support\Facades {
         public static function listen($callback)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::listen($callback);
+            \Illuminate\Database\MySqlConnection::listen($callback);
         }
         
         /**
@@ -3784,7 +3772,7 @@ namespace Illuminate\Support\Facades {
         public static function raw($value)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::raw($value);
+            return \Illuminate\Database\MySqlConnection::raw($value);
         }
         
         /**
@@ -3797,7 +3785,7 @@ namespace Illuminate\Support\Facades {
         public static function recordsHaveBeenModified($value = true)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::recordsHaveBeenModified($value);
+            \Illuminate\Database\MySqlConnection::recordsHaveBeenModified($value);
         }
         
         /**
@@ -3809,7 +3797,7 @@ namespace Illuminate\Support\Facades {
         public static function isDoctrineAvailable()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::isDoctrineAvailable();
+            return \Illuminate\Database\MySqlConnection::isDoctrineAvailable();
         }
         
         /**
@@ -3823,7 +3811,7 @@ namespace Illuminate\Support\Facades {
         public static function getDoctrineColumn($table, $column)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getDoctrineColumn($table, $column);
+            return \Illuminate\Database\MySqlConnection::getDoctrineColumn($table, $column);
         }
         
         /**
@@ -3835,7 +3823,7 @@ namespace Illuminate\Support\Facades {
         public static function getDoctrineSchemaManager()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getDoctrineSchemaManager();
+            return \Illuminate\Database\MySqlConnection::getDoctrineSchemaManager();
         }
         
         /**
@@ -3847,7 +3835,7 @@ namespace Illuminate\Support\Facades {
         public static function getDoctrineConnection()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getDoctrineConnection();
+            return \Illuminate\Database\MySqlConnection::getDoctrineConnection();
         }
         
         /**
@@ -3859,7 +3847,7 @@ namespace Illuminate\Support\Facades {
         public static function getPdo()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getPdo();
+            return \Illuminate\Database\MySqlConnection::getPdo();
         }
         
         /**
@@ -3871,7 +3859,7 @@ namespace Illuminate\Support\Facades {
         public static function getReadPdo()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getReadPdo();
+            return \Illuminate\Database\MySqlConnection::getReadPdo();
         }
         
         /**
@@ -3884,7 +3872,7 @@ namespace Illuminate\Support\Facades {
         public static function setPdo($pdo)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setPdo($pdo);
+            return \Illuminate\Database\MySqlConnection::setPdo($pdo);
         }
         
         /**
@@ -3897,7 +3885,7 @@ namespace Illuminate\Support\Facades {
         public static function setReadPdo($pdo)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setReadPdo($pdo);
+            return \Illuminate\Database\MySqlConnection::setReadPdo($pdo);
         }
         
         /**
@@ -3910,7 +3898,7 @@ namespace Illuminate\Support\Facades {
         public static function setReconnector($reconnector)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setReconnector($reconnector);
+            return \Illuminate\Database\MySqlConnection::setReconnector($reconnector);
         }
         
         /**
@@ -3922,7 +3910,7 @@ namespace Illuminate\Support\Facades {
         public static function getName()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getName();
+            return \Illuminate\Database\MySqlConnection::getName();
         }
         
         /**
@@ -3935,7 +3923,19 @@ namespace Illuminate\Support\Facades {
         public static function getConfig($option = null)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getConfig($option);
+            return \Illuminate\Database\MySqlConnection::getConfig($option);
+        }
+        
+        /**
+         * Get the PDO driver name.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getDriverName()
+        {
+            //Method inherited from \Illuminate\Database\Connection            
+            return \Illuminate\Database\MySqlConnection::getDriverName();
         }
         
         /**
@@ -3947,7 +3947,7 @@ namespace Illuminate\Support\Facades {
         public static function getQueryGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getQueryGrammar();
+            return \Illuminate\Database\MySqlConnection::getQueryGrammar();
         }
         
         /**
@@ -3960,7 +3960,7 @@ namespace Illuminate\Support\Facades {
         public static function setQueryGrammar($grammar)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setQueryGrammar($grammar);
+            \Illuminate\Database\MySqlConnection::setQueryGrammar($grammar);
         }
         
         /**
@@ -3972,7 +3972,7 @@ namespace Illuminate\Support\Facades {
         public static function getSchemaGrammar()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getSchemaGrammar();
+            return \Illuminate\Database\MySqlConnection::getSchemaGrammar();
         }
         
         /**
@@ -3985,7 +3985,7 @@ namespace Illuminate\Support\Facades {
         public static function setSchemaGrammar($grammar)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setSchemaGrammar($grammar);
+            \Illuminate\Database\MySqlConnection::setSchemaGrammar($grammar);
         }
         
         /**
@@ -3997,7 +3997,7 @@ namespace Illuminate\Support\Facades {
         public static function getPostProcessor()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getPostProcessor();
+            return \Illuminate\Database\MySqlConnection::getPostProcessor();
         }
         
         /**
@@ -4010,7 +4010,7 @@ namespace Illuminate\Support\Facades {
         public static function setPostProcessor($processor)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setPostProcessor($processor);
+            \Illuminate\Database\MySqlConnection::setPostProcessor($processor);
         }
         
         /**
@@ -4022,7 +4022,7 @@ namespace Illuminate\Support\Facades {
         public static function getEventDispatcher()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getEventDispatcher();
+            return \Illuminate\Database\MySqlConnection::getEventDispatcher();
         }
         
         /**
@@ -4035,7 +4035,7 @@ namespace Illuminate\Support\Facades {
         public static function setEventDispatcher($events)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setEventDispatcher($events);
+            \Illuminate\Database\MySqlConnection::setEventDispatcher($events);
         }
         
         /**
@@ -4047,7 +4047,7 @@ namespace Illuminate\Support\Facades {
         public static function pretending()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::pretending();
+            return \Illuminate\Database\MySqlConnection::pretending();
         }
         
         /**
@@ -4059,7 +4059,7 @@ namespace Illuminate\Support\Facades {
         public static function getQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getQueryLog();
+            return \Illuminate\Database\MySqlConnection::getQueryLog();
         }
         
         /**
@@ -4071,7 +4071,7 @@ namespace Illuminate\Support\Facades {
         public static function flushQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::flushQueryLog();
+            \Illuminate\Database\MySqlConnection::flushQueryLog();
         }
         
         /**
@@ -4083,7 +4083,7 @@ namespace Illuminate\Support\Facades {
         public static function enableQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::enableQueryLog();
+            \Illuminate\Database\MySqlConnection::enableQueryLog();
         }
         
         /**
@@ -4095,7 +4095,7 @@ namespace Illuminate\Support\Facades {
         public static function disableQueryLog()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::disableQueryLog();
+            \Illuminate\Database\MySqlConnection::disableQueryLog();
         }
         
         /**
@@ -4107,7 +4107,7 @@ namespace Illuminate\Support\Facades {
         public static function logging()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::logging();
+            return \Illuminate\Database\MySqlConnection::logging();
         }
         
         /**
@@ -4119,7 +4119,7 @@ namespace Illuminate\Support\Facades {
         public static function getDatabaseName()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getDatabaseName();
+            return \Illuminate\Database\MySqlConnection::getDatabaseName();
         }
         
         /**
@@ -4132,7 +4132,7 @@ namespace Illuminate\Support\Facades {
         public static function setDatabaseName($database)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setDatabaseName($database);
+            return \Illuminate\Database\MySqlConnection::setDatabaseName($database);
         }
         
         /**
@@ -4144,7 +4144,7 @@ namespace Illuminate\Support\Facades {
         public static function getTablePrefix()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getTablePrefix();
+            return \Illuminate\Database\MySqlConnection::getTablePrefix();
         }
         
         /**
@@ -4157,7 +4157,7 @@ namespace Illuminate\Support\Facades {
         public static function setTablePrefix($prefix)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::setTablePrefix($prefix);
+            \Illuminate\Database\MySqlConnection::setTablePrefix($prefix);
         }
         
         /**
@@ -4170,7 +4170,7 @@ namespace Illuminate\Support\Facades {
         public static function withTablePrefix($grammar)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::withTablePrefix($grammar);
+            return \Illuminate\Database\MySqlConnection::withTablePrefix($grammar);
         }
         
         /**
@@ -4184,7 +4184,7 @@ namespace Illuminate\Support\Facades {
         public static function resolverFor($driver, $callback)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::resolverFor($driver, $callback);
+            \Illuminate\Database\MySqlConnection::resolverFor($driver, $callback);
         }
         
         /**
@@ -4197,7 +4197,7 @@ namespace Illuminate\Support\Facades {
         public static function getResolver($driver)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::getResolver($driver);
+            return \Illuminate\Database\MySqlConnection::getResolver($driver);
         }
         
         /**
@@ -4212,7 +4212,7 @@ namespace Illuminate\Support\Facades {
         public static function transaction($callback, $attempts = 1)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::transaction($callback, $attempts);
+            return \Illuminate\Database\MySqlConnection::transaction($callback, $attempts);
         }
         
         /**
@@ -4225,7 +4225,7 @@ namespace Illuminate\Support\Facades {
         public static function beginTransaction()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::beginTransaction();
+            \Illuminate\Database\MySqlConnection::beginTransaction();
         }
         
         /**
@@ -4237,7 +4237,7 @@ namespace Illuminate\Support\Facades {
         public static function commit()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::commit();
+            \Illuminate\Database\MySqlConnection::commit();
         }
         
         /**
@@ -4250,7 +4250,7 @@ namespace Illuminate\Support\Facades {
         public static function rollBack($toLevel = null)
         {
             //Method inherited from \Illuminate\Database\Connection            
-            \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::rollBack($toLevel);
+            \Illuminate\Database\MySqlConnection::rollBack($toLevel);
         }
         
         /**
@@ -4262,7 +4262,7 @@ namespace Illuminate\Support\Facades {
         public static function transactionLevel()
         {
             //Method inherited from \Illuminate\Database\Connection            
-            return \Hhxsv5\LaravelS\Illuminate\Database\SwooleMySQLConnection::transactionLevel();
+            return \Illuminate\Database\MySqlConnection::transactionLevel();
         }
          
     }
@@ -13011,282 +13011,6 @@ namespace Jenssegers\Agent\Facades {
  
 }
 
-namespace Appstract\LushHttp { 
-
-    class LushFacade {
-        
-        /**
-         * Set the url with parameters.
-         *
-         * @param $url
-         * @param array|object $parameters
-         * @return $this 
-         * @static 
-         */ 
-        public static function url($url, $parameters = array())
-        {
-            return \Appstract\LushHttp\Lush::url($url, $parameters);
-        }
-        
-        /**
-         * Set headers.
-         *
-         * @param array $headers
-         * @return $this 
-         * @static 
-         */ 
-        public static function headers($headers)
-        {
-            return \Appstract\LushHttp\Lush::headers($headers);
-        }
-        
-        /**
-         * Set options.
-         *
-         * @param array $options
-         * @return $this 
-         * @static 
-         */ 
-        public static function options($options)
-        {
-            return \Appstract\LushHttp\Lush::options($options);
-        }
-        
-        /**
-         * Reset all request options.
-         *
-         * @return $this 
-         * @static 
-         */ 
-        public static function reset()
-        {
-            return \Appstract\LushHttp\Lush::reset();
-        }
-        
-        /**
-         * Post as Json.
-         *
-         * @return $this 
-         * @static 
-         */ 
-        public static function asJson()
-        {
-            return \Appstract\LushHttp\Lush::asJson();
-        }
-        
-        /**
-         * Post as form params.
-         *
-         * @return $this 
-         * @static 
-         */ 
-        public static function asFormParams()
-        {
-            return \Appstract\LushHttp\Lush::asFormParams();
-        }
-        
-        /**
-         * Create a request.
-         *
-         * @param $method
-         * @return \Appstract\LushHttp\Response\LushResponse 
-         * @static 
-         */ 
-        public static function request($method)
-        {
-            return \Appstract\LushHttp\Lush::request($method);
-        }
-         
-    }
- 
-}
-
-namespace Encore\Admin\Facades { 
-
-    class Admin {
-        
-        /**
-         * 
-         *
-         * @param $model
-         * @param \Closure $callable
-         * @return \Encore\Admin\Grid 
-         * @static 
-         */ 
-        public static function grid($model, $callable)
-        {
-            return \Encore\Admin\Admin::grid($model, $callable);
-        }
-        
-        /**
-         * 
-         *
-         * @param $model
-         * @param \Closure $callable
-         * @return \Encore\Admin\Form 
-         * @static 
-         */ 
-        public static function form($model, $callable)
-        {
-            return \Encore\Admin\Admin::form($model, $callable);
-        }
-        
-        /**
-         * Build a tree.
-         *
-         * @param $model
-         * @return \Encore\Admin\Tree 
-         * @static 
-         */ 
-        public static function tree($model, $callable = null)
-        {
-            return \Encore\Admin\Admin::tree($model, $callable);
-        }
-        
-        /**
-         * 
-         *
-         * @param \Closure $callable
-         * @return \Encore\Admin\Layout\Content 
-         * @static 
-         */ 
-        public static function content($callable = null)
-        {
-            return \Encore\Admin\Admin::content($callable);
-        }
-        
-        /**
-         * 
-         *
-         * @param $model
-         * @return mixed 
-         * @static 
-         */ 
-        public static function getModel($model)
-        {
-            return \Encore\Admin\Admin::getModel($model);
-        }
-        
-        /**
-         * Add css or get all css.
-         *
-         * @param null $css
-         * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void 
-         * @static 
-         */ 
-        public static function css($css = null)
-        {
-            return \Encore\Admin\Admin::css($css);
-        }
-        
-        /**
-         * Add js or get all js.
-         *
-         * @param null $js
-         * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void 
-         * @static 
-         */ 
-        public static function js($js = null)
-        {
-            return \Encore\Admin\Admin::js($js);
-        }
-        
-        /**
-         * 
-         *
-         * @param string $script
-         * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void 
-         * @static 
-         */ 
-        public static function script($script = '')
-        {
-            return \Encore\Admin\Admin::script($script);
-        }
-        
-        /**
-         * Left sider-bar menu.
-         *
-         * @return array 
-         * @static 
-         */ 
-        public static function menu()
-        {
-            return \Encore\Admin\Admin::menu();
-        }
-        
-        /**
-         * Get admin title.
-         *
-         * @return \Config 
-         * @static 
-         */ 
-        public static function title()
-        {
-            return \Encore\Admin\Admin::title();
-        }
-        
-        /**
-         * Get current login user.
-         *
-         * @return mixed 
-         * @static 
-         */ 
-        public static function user()
-        {
-            return \Encore\Admin\Admin::user();
-        }
-        
-        /**
-         * Set navbar.
-         *
-         * @param \Closure|null $builder
-         * @return \Encore\Admin\Navbar 
-         * @static 
-         */ 
-        public static function navbar($builder = null)
-        {
-            return \Encore\Admin\Admin::navbar($builder);
-        }
-        
-        /**
-         * Get navbar object.
-         *
-         * @return \Encore\Admin\Widgets\Navbar 
-         * @static 
-         */ 
-        public static function getNavbar()
-        {
-            return \Encore\Admin\Admin::getNavbar();
-        }
-        
-        /**
-         * Register the auth routes.
-         *
-         * @return void 
-         * @static 
-         */ 
-        public static function registerAuthRoutes()
-        {
-            \Encore\Admin\Admin::registerAuthRoutes();
-        }
-        
-        /**
-         * Extend a extension.
-         *
-         * @param string $name
-         * @param string $class
-         * @return void 
-         * @static 
-         */ 
-        public static function extend($name, $class)
-        {
-            \Encore\Admin\Admin::extend($name, $class);
-        }
-         
-    }
- 
-}
-
 namespace Tymon\JWTAuth\Facades { 
 
     class JWTAuth {
@@ -13780,6 +13504,282 @@ namespace Tymon\JWTAuth\Facades {
         public static function setRefreshFlow($refreshFlow = true)
         {
             return \Tymon\JWTAuth\Factory::setRefreshFlow($refreshFlow);
+        }
+         
+    }
+ 
+}
+
+namespace Appstract\LushHttp { 
+
+    class LushFacade {
+        
+        /**
+         * Set the url with parameters.
+         *
+         * @param $url
+         * @param array|object $parameters
+         * @return $this 
+         * @static 
+         */ 
+        public static function url($url, $parameters = array())
+        {
+            return \Appstract\LushHttp\Lush::url($url, $parameters);
+        }
+        
+        /**
+         * Set headers.
+         *
+         * @param array $headers
+         * @return $this 
+         * @static 
+         */ 
+        public static function headers($headers)
+        {
+            return \Appstract\LushHttp\Lush::headers($headers);
+        }
+        
+        /**
+         * Set options.
+         *
+         * @param array $options
+         * @return $this 
+         * @static 
+         */ 
+        public static function options($options)
+        {
+            return \Appstract\LushHttp\Lush::options($options);
+        }
+        
+        /**
+         * Reset all request options.
+         *
+         * @return $this 
+         * @static 
+         */ 
+        public static function reset()
+        {
+            return \Appstract\LushHttp\Lush::reset();
+        }
+        
+        /**
+         * Post as Json.
+         *
+         * @return $this 
+         * @static 
+         */ 
+        public static function asJson()
+        {
+            return \Appstract\LushHttp\Lush::asJson();
+        }
+        
+        /**
+         * Post as form params.
+         *
+         * @return $this 
+         * @static 
+         */ 
+        public static function asFormParams()
+        {
+            return \Appstract\LushHttp\Lush::asFormParams();
+        }
+        
+        /**
+         * Create a request.
+         *
+         * @param $method
+         * @return \Appstract\LushHttp\Response\LushResponse 
+         * @static 
+         */ 
+        public static function request($method)
+        {
+            return \Appstract\LushHttp\Lush::request($method);
+        }
+         
+    }
+ 
+}
+
+namespace Encore\Admin\Facades { 
+
+    class Admin {
+        
+        /**
+         * 
+         *
+         * @param $model
+         * @param \Closure $callable
+         * @return \Encore\Admin\Grid 
+         * @static 
+         */ 
+        public static function grid($model, $callable)
+        {
+            return \Encore\Admin\Admin::grid($model, $callable);
+        }
+        
+        /**
+         * 
+         *
+         * @param $model
+         * @param \Closure $callable
+         * @return \Encore\Admin\Form 
+         * @static 
+         */ 
+        public static function form($model, $callable)
+        {
+            return \Encore\Admin\Admin::form($model, $callable);
+        }
+        
+        /**
+         * Build a tree.
+         *
+         * @param $model
+         * @return \Encore\Admin\Tree 
+         * @static 
+         */ 
+        public static function tree($model, $callable = null)
+        {
+            return \Encore\Admin\Admin::tree($model, $callable);
+        }
+        
+        /**
+         * 
+         *
+         * @param \Closure $callable
+         * @return \Encore\Admin\Layout\Content 
+         * @static 
+         */ 
+        public static function content($callable = null)
+        {
+            return \Encore\Admin\Admin::content($callable);
+        }
+        
+        /**
+         * 
+         *
+         * @param $model
+         * @return mixed 
+         * @static 
+         */ 
+        public static function getModel($model)
+        {
+            return \Encore\Admin\Admin::getModel($model);
+        }
+        
+        /**
+         * Add css or get all css.
+         *
+         * @param null $css
+         * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void 
+         * @static 
+         */ 
+        public static function css($css = null)
+        {
+            return \Encore\Admin\Admin::css($css);
+        }
+        
+        /**
+         * Add js or get all js.
+         *
+         * @param null $js
+         * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void 
+         * @static 
+         */ 
+        public static function js($js = null)
+        {
+            return \Encore\Admin\Admin::js($js);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $script
+         * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|void 
+         * @static 
+         */ 
+        public static function script($script = '')
+        {
+            return \Encore\Admin\Admin::script($script);
+        }
+        
+        /**
+         * Left sider-bar menu.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function menu()
+        {
+            return \Encore\Admin\Admin::menu();
+        }
+        
+        /**
+         * Get admin title.
+         *
+         * @return \Config 
+         * @static 
+         */ 
+        public static function title()
+        {
+            return \Encore\Admin\Admin::title();
+        }
+        
+        /**
+         * Get current login user.
+         *
+         * @return mixed 
+         * @static 
+         */ 
+        public static function user()
+        {
+            return \Encore\Admin\Admin::user();
+        }
+        
+        /**
+         * Set navbar.
+         *
+         * @param \Closure|null $builder
+         * @return \Encore\Admin\Navbar 
+         * @static 
+         */ 
+        public static function navbar($builder = null)
+        {
+            return \Encore\Admin\Admin::navbar($builder);
+        }
+        
+        /**
+         * Get navbar object.
+         *
+         * @return \Encore\Admin\Widgets\Navbar 
+         * @static 
+         */ 
+        public static function getNavbar()
+        {
+            return \Encore\Admin\Admin::getNavbar();
+        }
+        
+        /**
+         * Register the auth routes.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function registerAuthRoutes()
+        {
+            \Encore\Admin\Admin::registerAuthRoutes();
+        }
+        
+        /**
+         * Extend a extension.
+         *
+         * @param string $name
+         * @param string $class
+         * @return void 
+         * @static 
+         */ 
+        public static function extend($name, $class)
+        {
+            \Encore\Admin\Admin::extend($name, $class);
         }
          
     }
@@ -15931,13 +15931,13 @@ namespace  {
 
     class Agent extends \Jenssegers\Agent\Facades\Agent {}
 
-    class Lush extends \Appstract\LushHttp\LushFacade {}
-
-    class Admin extends \Encore\Admin\Facades\Admin {}
-
     class JWTAuth extends \Tymon\JWTAuth\Facades\JWTAuth {}
 
     class JWTFactory extends \Tymon\JWTAuth\Facades\JWTFactory {}
+
+    class Lush extends \Appstract\LushHttp\LushFacade {}
+
+    class Admin extends \Encore\Admin\Facades\Admin {}
  
 }
 

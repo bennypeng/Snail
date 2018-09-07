@@ -87,7 +87,7 @@ class WxUser extends Model
 
     function setUserSessionId($key, $data = [])
     {
-        return true;
+
         if (!$key || !$data) return false;
 
         Redis::hmset($key, $data);
