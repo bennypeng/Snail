@@ -49,7 +49,7 @@ class WxUserController extends Controller
         // 获取session_key 和 openId
         $sessionData   = $this->_getSessionData($jsCode);
 
-        Log::info('sessionData：', $sessionData);
+        Log::info('sessionId：' . $sessionId . ', sessionData：', $sessionData);
 
         // 网络请求失败
         if (!$sessionData)
