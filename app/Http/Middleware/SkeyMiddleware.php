@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Config;
 use App\WxUser;
+use Illuminate\Support\Facades\Log;
 
 class SkeyMiddleware
 {
@@ -32,6 +33,8 @@ class SkeyMiddleware
 
         if (!$userId)
         {
+
+            Log::error('sessionId过期：' . $sessionId);
             // sessionId已过期，重新登录
             return response()->json(Config::get('constants.SESSIONID_EXP_ERROR'));
         }
