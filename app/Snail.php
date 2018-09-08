@@ -77,8 +77,13 @@ class Snail extends Model
         foreach($snailConf as $k => $v)
         {
 
-            // 最多可看当前等级+3的蜗牛
-            if ($v['id'] >= $maxLevel + 3) continue;
+            // 最多可看当前等级+5的蜗牛
+            if ($maxLevel < 5)
+            {
+                if ($v['id'] >= $maxLevel + 8) continue;
+            } else {
+                if ($v['id'] >= $maxLevel + 3) continue;
+            }
 
             $costType     = 1;
 
