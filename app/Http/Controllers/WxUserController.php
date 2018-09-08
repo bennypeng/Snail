@@ -73,7 +73,7 @@ class WxUserController extends Controller
 
 
         // 数据签名校验
-        if ($signature != sha1($rawData . $sessionKey))
+        if (!$sessionId && $signature != sha1($rawData . $sessionKey))
         {
             return response()->json(Config::get('constants.SIGNATURE_ERROR'));
         }
