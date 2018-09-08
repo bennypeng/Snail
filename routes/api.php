@@ -44,6 +44,9 @@ Route::group(['middleware' => 'skey'], function() {
 
     //  回收蜗牛
     Route::post('snail/recly', 'SnailController@recly');
+
+    //  分享领取双倍收益
+    Route::get('conf/double', 'ConfigController@double');
 });
 
 //  登录授权

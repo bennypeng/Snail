@@ -33,8 +33,6 @@ class SkeyMiddleware
 
         if (!$userId)
         {
-
-            Log::error('sessionId过期：' . $sessionId);
             // sessionId已过期，重新登录
             return response()->json(Config::get('constants.SESSIONID_EXP_ERROR'));
         }

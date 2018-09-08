@@ -250,4 +250,38 @@ class ConfigController extends Controller
         );
     }
 
+    /**
+     * 分享领取双倍收益
+     * @param Request $req
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function double(Request $req)
+    {
+        $userId = $req->get('userId', '');
+
+        // 超出领取次数
+        if (!$this->shopModel->checkUserDoubleNums($userId))
+        {
+            return response()->json(Config::get('constants.FAILURE'));
+        }
+
+        $earnGold = $this->shopModel->getUserLastDouble($userId);
+
+        // 操作失败
+        if (!$earnGold || $earnGold <= 0)
+        {
+            return response()->json(Config::get('constants.FAILURE'));
+        }
+
+        $userBags = $this->userBagModel->getUserBag($userId);
+
+        $update = ['gold' => $earnGold + $userBags['gold']];
+
+        $this->userBagModel->setUserBag($userId, $update);
+
+        $this->shopModel->incrUserDoubleNums($userId);
+
+        return response()->json(Config::get('constants.SUCCESS'));
+    }
+
 }

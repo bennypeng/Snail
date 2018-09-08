@@ -149,6 +149,9 @@ class ShopBuff extends Model
             $key = $this->_getBuffKey();
 
             Redis::hset($key, $userId, json_encode($userBuffData));
+
+            // 暂记此次获得的金币，用于分享双倍离线收益
+            $this->setUserLastDouble($userId, $earnGold);
         }
 
         return $earnGold;
@@ -292,6 +295,87 @@ class ShopBuff extends Model
         return true;
     }
 
+    /**
+     * 设置用户双倍值
+     * @param string $userId
+     * @param int $earnGold
+     * @return bool
+     */
+    public function setUserLastDouble($userId = '', $earnGold = 0)
+    {
+
+        if (!$userId || !$earnGold) return false;
+
+        $key =$this->_getUserDoubleBuffKey($userId);
+
+        Redis::rpush($key, $earnGold);
+
+        return true;
+    }
+
+    /**
+     * 获取用户最近一次双倍值
+     * @param string $userId
+     * @return int
+     */
+    public function getUserLastDouble($userId = '')
+    {
+
+        if (!$userId) return 0;
+
+        $key = $this->_getUserDoubleBuffKey($userId);
+
+        if (!Redis::exists($key)) {
+
+            Redis::rpush($key, 0);
+
+            Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+
+            return 0;
+        }
+
+        return Redis::rpop($key);
+    }
+
+    /**
+     * 增加用户今日分享领取双倍奖励的次数
+     * @param string $userId
+     * @return bool
+     */
+    public function incrUserDoubleNums($userId = '')
+    {
+        if (!$userId) return false;
+
+        $key = $this->_getUserDoubleCheckKey($userId);
+
+        Redis::incrby($key, 1);
+
+        Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+
+        return true;
+    }
+
+    /**
+     * 检测用户进入分享领取双倍奖励的状态
+     * @param string $userId
+     * @return bool
+     */
+    public function checkUserDoubleNums($userId = '')
+    {
+        if (!$userId) return false;
+
+        $key = $this->_getUserDoubleCheckKey($userId);
+
+        if (Redis::exists($key)) {
+
+            $data = Redis::get($key);
+
+            if ($data >= 1) return false;
+        }
+
+        return true;
+    }
+
     private function _getBuffShopKey()
     {
         return 'CONFIG_BUFF_SHOP';
@@ -306,4 +390,15 @@ class ShopBuff extends Model
     {
         return 'U_BUFF_SHARE_NUMS_' . $userId;
     }
+
+    private function _getUserDoubleBuffKey($userId = '')
+    {
+        return 'U_BUFF_DOUBLE_' . $userId;
+    }
+
+    private function _getUserDoubleCheckKey($userId = '')
+    {
+        return 'U_BUFF_DOUBLE_CHECK_' . $userId;
+    }
+
 }

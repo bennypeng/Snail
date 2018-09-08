@@ -17,11 +17,12 @@ return [
         'log'        => false,
     ],
     'websocket'          => [
-        'enable'  => true,
+        'enable'  => false,
         'handler' => \App\Services\WebSocketService::class,
     ],
     'sockets'            => [
         //  TCP协议
+        /*
         [
             'host'     => '0.0.0.0',
             'port'     => 8082,
@@ -43,6 +44,7 @@ return [
             ],
             'handler'  => \App\Sockets\TestUdpSocket::class,
         ],
+        */
     ],
     'processes'          => [
         //  自定义进程，用于创建一些特殊的工作进程，比如监控、上报或者其他特殊的任务
