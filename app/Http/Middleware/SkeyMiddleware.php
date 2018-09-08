@@ -17,7 +17,8 @@ class SkeyMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $sessionId = $request->get('sessionId', '');
+
+        $sessionId = $request->header('sessionId', '');
 
         if (!$sessionId)
         {

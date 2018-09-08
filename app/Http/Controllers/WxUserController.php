@@ -19,6 +19,7 @@ class WxUserController extends Controller
     protected $userBagModel;
     protected $shopModel;
     protected $snailModel;
+    protected $configModel;
 
     public function __construct()
     {
@@ -26,6 +27,7 @@ class WxUserController extends Controller
         $this->userBagModel = new UserBag;
         $this->shopModel    = new ShopBuff;
         $this->snailModel   = new Snail;
+        $this->configModel  = new \App\Config;
     }
 
     /**
@@ -40,7 +42,7 @@ class WxUserController extends Controller
         $jsCode        = $req->get('js_code', '');
         $encryptedData = $req->get('encryptedData', '');
         $iv            = $req->get('iv', '');
-        $sessionId     = $req->get('sessionId', '');
+        $sessionId     = $req->header('sessionId', '');
         $signature     = $req->get('signature', '');
         $rawData       = $req->get('rawData', '');
 
@@ -157,6 +159,9 @@ class WxUserController extends Controller
         $userBags        = $this->userBagModel->getUserBag($userId, true);
         $userBuff        = $this->shopModel->getUserBuff($userId);
         $snailEarnPerSec = $this->snailModel->calcSnailEarn($userBags['snailMap']);
+        $adConfig        = $this->configModel->getConfig('AUDIT_SWITCH');
+
+        $adConfig = json_decode($adConfig);
 
         $userBags['snailMap'] = array_values($userBags['snailMap']);
 
@@ -168,6 +173,7 @@ class WxUserController extends Controller
                     'snailEarnPerSec' => $snailEarnPerSec,
                     'userBags'        => $userBags,
                     'userBuff'        => $userBuff,
+                    'adConfig'        => $adConfig
                 ),
                 Config::get('constants.SUCCESS')
             )

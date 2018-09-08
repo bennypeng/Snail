@@ -1,10 +1,5 @@
 <?php
 
-//  简易聊天室
-//Route::get('/chat', function () {
-//    return view('chat/index');
-//});
-
 //  日志查询
 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
 
@@ -14,6 +9,7 @@ Route::get('.well-known/acme-challenge/{file}', function () {
     $arg1 = Route::input('file');
 
     if (file_exists(storage_path($arg1))) {
+
         $content = file_get_contents(storage_path($arg1));
 
         $response = Response::make($content);
@@ -22,6 +18,25 @@ Route::get('.well-known/acme-challenge/{file}', function () {
 
         return $response;
     }
+});
+
+//  前端资源资源下载
+Route::get('res/{dir1}/{dir2}/{file}', function (){
+
+    $arg1 = Route::input('dir1');
+
+    $arg2 = Route::input('dir2');
+
+    $arg3 = Route::input('file');
+
+    $path = storage_path("res/{$arg1}/{$arg2}/{$arg3}");
+
+    if (file_exists($path)) {
+
+        return response()->download($path, $arg3);
+
+    }
+
 });
 
 //  测试vue页面

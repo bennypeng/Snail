@@ -246,4 +246,5 @@ class ConfigController extends Controller
             )
         );
     }
+
 }
