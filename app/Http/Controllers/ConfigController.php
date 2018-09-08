@@ -8,6 +8,7 @@ use App\ShopBuff;
 use App\Snail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 class ConfigController extends Controller
 {
@@ -130,6 +131,8 @@ class ConfigController extends Controller
             return response()->json(Config::get('constants.FAILURE'));
         }
 
+        Log::info('领取每日奖励，userId: ' . $userId . ', day: ' . $day);
+
         $userBags['snailMap'] = array_values($userBags['snailMap']);
 
         return response()->json(
@@ -203,6 +206,8 @@ class ConfigController extends Controller
 
             // 增加分享次数
             $this->shopModel->incrUserShopShareNums($userId);
+
+            Log::info('分享领buff，userId: ' . $userId . ', buffConf: ' , $buffConf);
         } else {
 
             $userBag  = $this->userBagModel->getUserBag($userId);
@@ -226,15 +231,13 @@ class ConfigController extends Controller
             // 购买失败，人工处理退款
             if (!$ret)
             {
-                /**
-                 * 退款操作
-                 * @todo
-                 */
                 return response()->json(Config::get('constants.FAILURE'));
             }
 
             // 增加增益效果
             $this->shopModel->setUserBuff($userId, $buffConf['buffType'], $buffConf['timeSec']);
+
+            Log::info('购买buff，userId: ' . $userId . ', buffConf: ' , $buffConf);
         }
 
         return response()->json(

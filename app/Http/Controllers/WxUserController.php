@@ -106,7 +106,8 @@ class WxUserController extends Controller
                 if ($errCode == 0)
                 {
                     $dataArr = json_decode($data, true);
-                    $userId = $this->wxUserModel->registerUser([
+
+                    $update = [
                         'openId'    => $openId,
                         'cId'       => '',
                         'gender'    => $dataArr['gender'],
@@ -117,7 +118,9 @@ class WxUserController extends Controller
                         'country'   => $dataArr['country'],
                         'province'  => $dataArr['province'],
                         'city'      => $dataArr['city'],
-                    ]);
+                    ];
+
+                    $userId = $this->wxUserModel->registerUser($update);
                     // 注册成功， 则生成sessionId返回给客户端
                     if ($userId)
                     {
@@ -136,6 +139,8 @@ class WxUserController extends Controller
 
                     } else {
                         // 注册失败
+                        Log::error('注册失败，update: ', $update);
+
                         return response()->json(Config::get('constants.REG_ERROR'));
                     }
                 } else {

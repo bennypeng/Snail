@@ -6,6 +6,7 @@ use App\UserBag;
 use App\Snail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 
 class SnailController extends Controller
 {
@@ -92,9 +93,12 @@ class SnailController extends Controller
             'item_' . $to   => '[' . $userBags['snailMap'][$to][0] . ', ' . $userBags['snailMap'][$to][1] .']'
         ];
 
+        Log::info('合成蜗牛，userId: ' . $userId . ', data: ', $data);
+
         // 操作失败
         if (!$this->userBagModel->setUserBag($userId, $data))
         {
+
             return response()->json(Config::get('constants.FAILURE'));
         }
 
@@ -117,6 +121,7 @@ class SnailController extends Controller
     public function buy(Request $req)
     {
         $userId  = $req->get('userId', '');
+
         $snailId = $req->get('snailId', '');
 
         // 参数错误
@@ -214,6 +219,8 @@ class SnailController extends Controller
 
         if (isset($data) && $data)
         {
+            Log::info('购买蜗牛，userId: ' . $userId . ', data: ', $data);
+
             // 操作失败
             if (!$this->userBagModel->setUserBag($userId, $data))
             {
@@ -298,6 +305,8 @@ class SnailController extends Controller
                     'item_' . $seatId => '[' . $snailId . ', ' . $joinStatus .']'
                 ];
 
+                Log::info('上/下蜗牛，userId: ' . $userId . ', data: ', $data);
+
                 // 操作失败
                 if (!$this->userBagModel->setUserBag($userId, $data))
                 {
@@ -317,6 +326,11 @@ class SnailController extends Controller
         );
     }
 
+    /**
+     * 回收蜗牛
+     * @param Request $req
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function recly(Request $req)
     {
         $userId = $req->get('userId', '');
@@ -357,6 +371,8 @@ class SnailController extends Controller
             'gold' => $userBags['gold'],
             'item_' . $seatId => '[]'
         ];
+
+        Log::info('回收蜗牛，userId: ' . $userId . ', data: ', $data);
 
         // 操作失败
         if (!$this->userBagModel->setUserBag($userId, $data))
