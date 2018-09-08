@@ -94,6 +94,8 @@ class UserBag extends Model
 
         unset($userBag['id']);
 
+        $userBag['gold'] = intval($userBag['gold']);
+
         return $userBag;
     }
 
