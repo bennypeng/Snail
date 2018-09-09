@@ -172,6 +172,25 @@ class WxUserController extends Controller
 
         $userBags['snailMap'] = array_values($userBags['snailMap']);
 
+        // 设置离线半小时收益buff
+        if (!$userBuff)
+        {
+            $this->shopModel->setUserBuff($userId, 2, 1800);
+
+            Log::info('用户增加半小时离线收益，userId：' . $userId);
+        } else {
+            foreach($userBuff as $v)
+            {
+                if ($v['buffType'] != 2) continue;
+
+                if ($v['endTime'] < time()) continue;
+
+                $this->shopModel->setUserBuff($userId, 2, 1800);
+
+                Log::info('用户增加半小时离线收益，userId：' . $userId);
+            }
+        }
+
         return response()->json(
             array_merge(
                 array(

@@ -112,7 +112,7 @@ class ShopBuff extends Model
 
         unset($v);
 
-        if (!$data['snailEarnPerSec'] || !$data['offlineBuffSec']) return 0;
+        if (!$data['snailEarnPerSec']) return 0;
 
         // X2 buff 也当作离线收益来计算
         if ($data['doubleBuffSec'])

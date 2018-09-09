@@ -280,7 +280,7 @@ class SnailController extends Controller
                 foreach($userBags['snailMap'] as $v)
                 {
                     if (!isset($v[1])) continue;
-                    
+
                     if ($v[1] == 1)
                     {
                         $counts++;
