@@ -72,11 +72,17 @@ class SnailController extends Controller
             return response()->json(Config::get('constants.SNAIL_LEVEL_ERROR'));
         }
 
+        // 禁止合成超过24级的蜗牛
+        if ($userBags['snailMap'][$to][0] + 1 > 24)
+        {
+            return response()->json(Config::get('constants.SNAIL_MAX_LEVEL_ERROR'));
+        }
+
         // 获取用户当前解锁的最大等级
         $maxLevel = $this->snailModel->getUserSnailMaxLevel($userId);
 
         // 如果超过用户当前解锁的最大等级
-        if ($userBags['snailMap'][$from][0] > $maxLevel)
+        if ($userBags['snailMap'][$from][0] + 1 > $maxLevel)
         {
             $this->snailModel->incrUserSnailMaxLevel($userId);
         }

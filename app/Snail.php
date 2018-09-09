@@ -77,65 +77,95 @@ class Snail extends Model
         foreach($snailConf as $k => $v)
         {
 
-            // 最多可看当前等级+5的蜗牛
-            if ($maxLevel < 5)
+            // 最多可看的蜗牛
+            if ($maxLevel <= 5)
             {
-                if ($v['id'] >= $maxLevel + 8) continue;
+                if ($v['id'] >= $maxLevel + 5) continue;
             } else {
                 if ($v['id'] >= $maxLevel + 3) continue;
             }
 
-            $costType     = 1;
-
-            $costVal      = $v['diamondPrice'];
-
-            $unlockStatus = 0;
-
+            // 不存在蜗牛
             if (!isset($userSnailBuyNumsArr[$v['id']]))
             {
                 $costType     = 1;
+
                 $costVal      = 999999;
+
                 $unlockStatus = 0;
+            }
+
+            // 筛选购买的货币类型
+            // 用金币买的
+            if ($v['diamondPrice'] == -1)
+            {
+                // 对应的蜗牛购买了几次
+                $userSnailBuyNums = isset($userSnailBuyNumsArr[$v['id']]) ? $userSnailBuyNumsArr[$v['id']] : 1;
+
+                // 计算次数价格
+                $numsPrice = $this->calcSnailPrice($v, $userSnailBuyNums);
+
+                $costType     = 2;
+
+                $costVal      = round($numsPrice);
+
+                $unlockStatus = $v['goldUnlockId'] <= $maxLevel ? 1 : 0;
+
             } else {
+                // 用钻石买的
 
-                // 可以用钻石买的
-                if ($maxLevel >= $v['diamondUnlockId'] && $v['diamondPrice'] != -1)
+                $costType     = 1;
+
+                $costVal      = $v['diamondPrice'];
+
+                $unlockStatus = $v['diamondUnlockId'] <= $maxLevel && $v['diamondPrice'] != -1 ? 1 : 0;;
+            }
+
+            if ($v['id'] != 1)
+            {
+                if ($maxLevel < 6)
                 {
-                    $costType     = 1;
-                    $costVal      = $v['diamondPrice'];
-                    $unlockStatus = 1;
+                    // 可看剪影
+                    if ($v['id'] <= $maxLevel)
+                    {
+                        $unlockStatus = 2;
+                    }
+                } else {
+                    // 倒数一二只能看剪影
+                    if ($v['id'] > $maxLevel - 2 && $v['id'] <= $maxLevel)
+                    {
+
+                        $unlockStatus = 2;
+
+                    } else if ($v['id'] > $maxLevel - 4 && $v['id'] <= $maxLevel - 2)
+                    {
+                        // 倒数三四只能用钻石买
+
+                        if ($v['diamondUnlockId'] <= $maxLevel && $v['diamondPrice'] != -1)
+                        {
+                            $costType = 1;
+
+                            $costVal  = $v['diamondPrice'];
+
+                            $unlockStatus = 1;
+
+                        } else {
+                            // 钻石未解锁， 只看剪影
+                            $unlockStatus = 2;
+                        }
+
+                    } else if ($v['id'] == $maxLevel - 4 )
+                    {
+                        // 倒数第五个用视频购买
+
+                        $costType = 3;
+
+                        $costVal  = 0;
+
+                        $unlockStatus = 1;
+
+                    }
                 }
-
-                // 可以用金币买的
-                if ($maxLevel >= $v['goldUnlockId'])
-                {
-                    // 对应的蜗牛购买了几次
-                    $userSnailBuyNums = isset($userSnailBuyNumsArr[$v['id']]) ? $userSnailBuyNumsArr[$v['id']] : 1;
-
-                    // 计算次数价格
-                    $numsPrice = $this->calcSnailPrice($v, $userSnailBuyNums);
-
-                    $costType     = 2;
-                    $costVal      = round($numsPrice);
-                    $unlockStatus = 1;
-                }
-
-                // 前两个显示为可见，但未解锁的
-                if ($maxLevel > 2 && $v['id'] <= $maxLevel && $v['id'] > $maxLevel - 2)
-                {
-                    $unlockStatus = 2;
-                }
-
-                // 可以使用视频观看来获得蜗牛的
-                if ($v['id'] == $maxLevel - 2)
-                {
-
-                    // 当天观看了几次视频
-
-                    $costType     = 3;
-                    $costVal      = 0;
-                }
-
             }
 
             $snailList[$v['id']] = [
@@ -279,7 +309,7 @@ class Snail extends Model
             $data = [];
 
             foreach($userBag['snailMap'] as $v) {
-                $data[] = !$v ? 0 : $v[0];
+                $data[] = !$v ? 1 : $v[0];
             }
 
             rsort($data);
