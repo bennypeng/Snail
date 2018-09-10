@@ -257,13 +257,21 @@ class ConfigController extends Controller
     }
 
     /**
-     * 分享领取双倍收益
+     * 分享到群领取双倍收益
      * @param Request $req
      * @return \Illuminate\Http\JsonResponse
      */
     public function double(Request $req)
     {
         $userId = $req->get('userId', '');
+
+        //$openGId = $req->get('userId', '');
+
+        // 缺少参数
+//        if (!$openGId)
+//        {
+//            return response()->json(Config::get('constants.ARGS_ERROR'));
+//        }
 
         // 超出领取次数
         if (!$this->shopModel->checkUserDoubleNums($userId))

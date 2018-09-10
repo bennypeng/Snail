@@ -28,6 +28,7 @@ return [
     'SEAT_ERROR'               => ['message' => '位置信息错误',                 'code' => 10020],
     'MAX_SHARE_NUM_ERROR'      => ['message' => '分享次数上限',                 'code' => 10021],
     'SNAIL_MAX_LEVEL_ERROR'    => ['message' => '已达到蜗牛最大合成等级',       'code' => 10022],
+    'SNAIL_STATUS_ERROR'       => ['message' => '蜗牛状态不允许',               'code' => 10023],
 
     'SUCCESS'                  => ['message' => '操作成功',                     'code' => 10200],
     'FAILURE'                  => ['message' => '操作失败',                     'code' => 10300],

@@ -60,6 +60,38 @@ class SnailController extends Controller
 
         $userBags = $this->userBagModel->getUserBag($userId, true);
 
+        // 只是更换位置
+        if (isset($userBags['snailMap'][$from][0]) && !isset($userBags['snailMap'][$to][0]) && $to <= 15 && $to >= 1)
+        {
+
+            // 蜗牛上阵中
+            if ($userBags['snailMap'][$from][1] == 1)
+            {
+                return response()->json(Config::get('constants.SNAIL_STATUS_ERROR'));
+            }
+
+            // 更新蜗牛数据
+            $userBags['snailMap'][$to] = $userBags['snailMap'][$from];
+
+            $userBags['snailMap'][$from] = [];
+
+            $update = [
+                'item_' . $from => '[]',
+                'item_' . $to   => '[' . $userBags['snailMap'][$to][0] . ', ' . $userBags['snailMap'][$to][1] .']'
+            ];
+
+            Log::info('交换位置，userId: ' . $userId . ', data: ', $update);
+
+            // 操作失败
+            if (!$this->userBagModel->setUserBag($userId, $update))
+            {
+                return response()->json(Config::get('constants.FAILURE'));
+            }
+
+            return response()->json(Config::get('constants.SUCCESS'));
+
+        }
+
         // 没有找到位置信息
         if (!isset($userBags['snailMap'][$from][0]) || !isset($userBags['snailMap'][$to][0]))
         {
@@ -104,7 +136,6 @@ class SnailController extends Controller
         // 操作失败
         if (!$this->userBagModel->setUserBag($userId, $update))
         {
-
             return response()->json(Config::get('constants.FAILURE'));
         }
 
@@ -313,7 +344,7 @@ class SnailController extends Controller
                     'item_' . $seatId => '[' . $snailId . ', ' . $joinStatus .']'
                 ];
 
-                Log::info('上/下蜗牛，userId: ' . $userId . ', data: ', $data);
+                Log::info('上/下蜗牛，userId: ' . $userId . ', data: ', $update);
 
                 // 操作失败
                 if (!$this->userBagModel->setUserBag($userId, $update))

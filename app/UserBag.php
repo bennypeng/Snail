@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class UserBag extends Model
@@ -107,6 +108,40 @@ class UserBag extends Model
     public function setUserBag($userId = '', $update = [])
     {
         if (!$userId || !$update) return false;
+
+        // 消费前，计算当前的产出
+        if (isset($update['gold']))
+        {
+            $userBagModel    = new \App\UserBag;
+
+            $snailModel      = new \App\Snail;
+
+            $userModel       = new \App\WxUser;
+
+            $userOpTs        = $userModel->getUserOpTs($userId);
+
+            if ($userOpTs)
+            {
+
+                $tsDiff = time() - $userOpTs;
+
+                if ($tsDiff && $tsDiff > 0)
+                {
+                    $userBags        = $userBagModel->getUserBag($userId, true);
+
+                    $snailEarnPerSec = $snailModel->calcSnailEarn($userBags['snailMap']);
+
+                    $earnGold        = round($snailEarnPerSec * $tsDiff);
+
+                    $update['gold'] += $earnGold;
+
+                    $userModel->setUserOpTs($userId, time());
+
+                    Log::info('增加/消耗货币前结算，userId：' . $userId . ', earnGold：' . $earnGold);
+                }
+
+            }
+        }
 
         if (!UserBag::where('userId', $userId)->update($update)) return false;
 

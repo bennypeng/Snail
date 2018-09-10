@@ -92,7 +92,42 @@ class WxUser extends Model
 
         Redis::hmset($key, $data);
 
-        Redis::expire($key, Carbon::parse('+30 days')->startOfDay()->timestamp);
+        Redis::expireAt($key, Carbon::parse('+30 days')->startOfDay()->timestamp);
+
+        return true;
+    }
+
+    /**
+     * 获取操作时间
+     * @param string $userId
+     * @return bool
+     */
+    function getUserOpTs($userId = '')
+    {
+
+        if (!$userId) return false;
+
+        $key = $this->getUserOpTsKey($userId);
+
+        return Redis::get($key);
+    }
+
+    /**
+     * 设置操作时间
+     * @param string $userId
+     * @param string $ts
+     * @return bool
+     */
+    function setUserOpTs($userId = '', $ts = '')
+    {
+
+        if (!$userId || !$ts) return false;
+
+        $key = $this->getUserOpTsKey($userId);
+
+        Redis::set($key, $ts);
+
+        Redis::expireAt($key, Carbon::now()->endOfDay()->timestamp);
 
         return true;
     }
@@ -100,6 +135,11 @@ class WxUser extends Model
     function getUserSessionIdKey($sessionId = '')
     {
         return 'SID_' . $sessionId;
+    }
+
+    function getUserOpTsKey($userId = '')
+    {
+        return 'U_OPTS_' . $userId;
     }
 
 

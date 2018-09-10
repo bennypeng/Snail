@@ -191,6 +191,9 @@ class WxUserController extends Controller
             }
         }
 
+        // 设置登录时间
+        $this->wxUserModel->setUserOpTs($userId, time());
+
         return response()->json(
             array_merge(
                 array(
