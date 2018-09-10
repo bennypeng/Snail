@@ -117,7 +117,10 @@ class ConfigController extends Controller
 
         // 发放奖励
         $userBags['diamond'] += $dailyReward['diamond'];
-        $ret = $this->userBagModel->setUserBag($userId, ['diamond' => $userBags['diamond']]);
+
+        $update = ['diamond' => $userBags['diamond']];
+
+        $ret = $this->userBagModel->setUserBag($userId, $update);
 
         // 增加领奖次数
         $this->dailyModel->setUserDailyStatus($userId);
@@ -226,7 +229,10 @@ class ConfigController extends Controller
 
             // 扣除相应钻石
             $diamond = $userBag['diamond'] - $buffConf['costVal'];
-            $ret = $this->userBagModel->setUserBag($userId, ['diamond' => $diamond]);
+
+            $update = ['diamond' => $diamond];
+
+            $ret = $this->userBagModel->setUserBag($userId, $update);
 
             // 购买失败，人工处理退款
             if (!$ret)

@@ -104,17 +104,17 @@ class UserBag extends Model
      * @param array $data
      * @return bool
      */
-    public function setUserBag($userId = '', $data = [])
+    public function setUserBag($userId = '', $update = [])
     {
-        if (!$userId || !$data) return false;
+        if (!$userId || !$update) return false;
 
-        if (!UserBag::where('userId', $userId)->update($data)) return false;
+        if (!UserBag::where('userId', $userId)->update($update)) return false;
 
         $key = $this->_getUserBagKey($userId);
 
         // 不删除KEY来缓解数据库压力
         //Redis::del($key);
-        Redis::hmset($key, $data);
+        Redis::hmset($key, $update);
 
         return true;
     }

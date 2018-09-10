@@ -132,7 +132,9 @@ class ShopBuff extends Model
         // 发放奖励，更新buff时间
         if ($earnGold)
         {
-            $ret = $userBagModel->setUserBag($userId, ['gold' => $userBag['gold'] + $earnGold]);
+            $update = ['gold' => $userBag['gold'] + $earnGold];
+
+            $ret = $userBagModel->setUserBag($userId, $update);
 
             if (!$ret)
             {

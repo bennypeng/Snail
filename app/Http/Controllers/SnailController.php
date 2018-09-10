@@ -94,15 +94,15 @@ class SnailController extends Controller
 
         $userBags['snailMap'][$to][1] = 0;
 
-        $data = [
+        $update = [
             'item_' . $from => '[]',
             'item_' . $to   => '[' . $userBags['snailMap'][$to][0] . ', ' . $userBags['snailMap'][$to][1] .']'
         ];
 
-        Log::info('合成蜗牛，userId: ' . $userId . ', data: ', $data);
+        Log::info('合成蜗牛，userId: ' . $userId . ', data: ', $update);
 
         // 操作失败
-        if (!$this->userBagModel->setUserBag($userId, $data))
+        if (!$this->userBagModel->setUserBag($userId, $update))
         {
 
             return response()->json(Config::get('constants.FAILURE'));
@@ -195,7 +195,7 @@ class SnailController extends Controller
 
             // 扣除金币
             $userBags['gold'] -= $snailConf[2];
-            $data = [
+            $update = [
                 'gold' => $userBags['gold'],
                 'item_' . $idx => '[' . $snailId . ', 0]'
             ];
@@ -214,7 +214,7 @@ class SnailController extends Controller
             // 增加观看次数
             $this->snailModel->incrUserSnailVedioNums($userId);
 
-            $data = [
+            $update = [
                 'item_' . $idx => '[' . $snailId . ', 0]'
             ];
 
@@ -223,12 +223,12 @@ class SnailController extends Controller
             return response()->json(Config::get('constants.UNDEFINED_ERROR'));
         }
 
-        if (isset($data) && $data)
+        if (isset($update) && $update)
         {
-            Log::info('购买蜗牛，userId: ' . $userId . ', data: ', $data);
+            Log::info('购买蜗牛，userId: ' . $userId . ', data: ', $update);
 
             // 操作失败
-            if (!$this->userBagModel->setUserBag($userId, $data))
+            if (!$this->userBagModel->setUserBag($userId, $update))
             {
                 return response()->json(Config::get('constants.FAILURE'));
             }
@@ -309,14 +309,14 @@ class SnailController extends Controller
 
                 list($snailId, $joinStatus) = $userBags['snailMap'][$seatId];
 
-                $data = [
+                $update = [
                     'item_' . $seatId => '[' . $snailId . ', ' . $joinStatus .']'
                 ];
 
                 Log::info('上/下蜗牛，userId: ' . $userId . ', data: ', $data);
 
                 // 操作失败
-                if (!$this->userBagModel->setUserBag($userId, $data))
+                if (!$this->userBagModel->setUserBag($userId, $update))
                 {
                     return response()->json(Config::get('constants.FAILURE'));
                 }
@@ -375,7 +375,7 @@ class SnailController extends Controller
 
         $userBags['snailMap'][$seatId] = [];
 
-        $data = [
+        $update = [
             'gold' => $userBags['gold'],
             'item_' . $seatId => '[]'
         ];
@@ -383,7 +383,7 @@ class SnailController extends Controller
         Log::info('回收蜗牛，userId: ' . $userId . ', data: ', $data);
 
         // 操作失败
-        if (!$this->userBagModel->setUserBag($userId, $data))
+        if (!$this->userBagModel->setUserBag($userId, $update))
         {
             return response()->json(Config::get('constants.FAILURE'));
         }
