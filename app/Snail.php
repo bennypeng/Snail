@@ -97,7 +97,7 @@ class Snail extends Model
 
             // 筛选购买的货币类型
             // 用金币买的
-            if ($v['diamondPrice'] == -1)
+            if ($v['diamondPrice'] == -1 || $v['goldUnlockId'] <= $maxLevel)
             {
                 // 对应的蜗牛购买了几次
                 $userSnailBuyNums = isset($userSnailBuyNumsArr[$v['id']]) ? $userSnailBuyNumsArr[$v['id']] : 1;

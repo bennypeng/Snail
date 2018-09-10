@@ -206,9 +206,9 @@ class SnailController extends Controller
                 return response()->json(Config::get('constants.DIAMOND_NOT_ENOUGH'));
             }
 
-            // 扣除金币
+            // 扣除钻石
             $userBags['diamond'] -= $snailConf[2];
-            $data = [
+            $update = [
                 'diamond' => $userBags['diamond'],
                 'item_' . $idx => '[' . $snailId . ', 0]'
             ];
