@@ -85,6 +85,26 @@ class WxUser extends Model
         return $userId;
     }
 
+    /**
+     * 通过sessionId获取userId
+     * @param string $sessionId
+     * @return bool|string
+     */
+    function getSKeyBySessionId($sessionId = '')
+    {
+        if (!$sessionId) return false;
+
+        $sessionIdKey = $this->getUserSessionIdKey($sessionId);
+
+        if (!Redis::exists($sessionIdKey)) return false;
+
+        $sessionKey = Redis::hget($sessionIdKey, 'session_key');
+
+        if (!$sessionKey) return false;
+
+        return $sessionKey;
+    }
+
     function setUserSessionId($key, $data = [])
     {
 

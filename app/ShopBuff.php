@@ -342,17 +342,16 @@ class ShopBuff extends Model
     /**
      * 增加用户今日分享领取双倍奖励的次数
      * @param string $userId
+     * @param string $openGId
      * @return bool
      */
-    public function incrUserDoubleNums($userId = '')
+    public function incrUserDoubleNums($userId = '', $openGId = '')
     {
-        if (!$userId) return false;
+        if (!$userId || $openGId) return false;
 
         $key = $this->_getUserDoubleCheckKey($userId);
 
-        Redis::incrby($key, 1);
-
-        Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+        Redis::hincrby($key, $openGId, 1);
 
         return true;
     }
@@ -360,19 +359,25 @@ class ShopBuff extends Model
     /**
      * 检测用户进入分享领取双倍奖励的状态
      * @param string $userId
+     * @param string $openGId
      * @return bool
      */
-    public function checkUserDoubleNums($userId = '')
+    public function checkUserDoubleNums($userId = '', $openGId = '')
     {
-        if (!$userId) return false;
+        if (!$userId || $openGId) return false;
 
         $key = $this->_getUserDoubleCheckKey($userId);
 
         if (Redis::exists($key)) {
 
-            $data = Redis::get($key);
+            $data = Redis::hget($key, $openGId);
 
             if ($data >= 1) return false;
+        } else {
+
+            Redis::hset($key, $openGId, 0);
+
+            Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
         }
 
         return true;

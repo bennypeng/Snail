@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\WxUser;
 use App\UserBag;
 use App\DailyReward;
 use App\ShopBuff;
 use App\Snail;
+use WXBizDataCrypt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 
 class ConfigController extends Controller
 {
+    protected $wxUserModel;
     protected $configModel;
     protected $dailyModel;
     protected $shopModel;
@@ -20,6 +23,7 @@ class ConfigController extends Controller
 
     public function __construct()
     {
+        $this->wxUserModel  = new WxUser;
         $this->configModel  = new \App\Config();
         $this->dailyModel   = new DailyReward;
         $this->shopModel    = new ShopBuff;
@@ -263,18 +267,49 @@ class ConfigController extends Controller
      */
     public function double(Request $req)
     {
-        $userId = $req->get('userId', '');
+        $userId        = $req->get('userId', '');
 
-        //$openGId = $req->get('userId', '');
+        $sessionId     = $req->header('sessionId', '');
+
+        $encryptedData = $req->get('encryptedData', '');
+
+        $iv            = $req->get('iv', '');
 
         // 缺少参数
-//        if (!$openGId)
-//        {
-//            return response()->json(Config::get('constants.ARGS_ERROR'));
-//        }
+        if (!$encryptedData || !$iv || !$sessionId)
+        {
+            return response()->json(Config::get('constants.ARGS_ERROR'));
+        }
+
+        $sessionKey = $this->wxUserModel->getSKeyBySessionId($sessionId);
+
+        // 获取sessionKey失败
+        if (!$sessionKey)
+        {
+            return response()->json(Config::get('constants.SESSIONKEY_ERROR'));
+        }
+
+        $pc = new WXBizDataCrypt(env('APPID'), $sessionKey);
+
+        $errCode = $pc->decryptData($encryptedData, $iv, $data );
+
+        // 解密失败
+        if ($errCode != 0) {
+
+            Log::error(sprintf('解密失败，userId：%s，sessionId：%s，encryptedData：%s，iv：%s', $userId, $sessionId, $encryptedData, $iv));
+
+            return response()->json(Config::get('constants.DECODE_ERROR'));
+
+        }
+
+        $dataArr = json_decode($data, true);
+
+        Log::info('解密数据：', $dataArr);
+
+        $openGId = $dataArr['openGId'];
 
         // 超出领取次数
-        if (!$this->shopModel->checkUserDoubleNums($userId))
+        if (!$this->shopModel->checkUserDoubleNums($userId, $openGId))
         {
             return response()->json(Config::get('constants.FAILURE'));
         }
