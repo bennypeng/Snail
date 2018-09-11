@@ -222,7 +222,7 @@ class SnailController extends Controller
             }
 
             // 增加蜗牛的购买次数
-            $this->snailModel->setUserSnailBuyNums($userId, $snailId);
+            $buyNum = $this->snailModel->setUserSnailBuyNums($userId, $snailId);
 
             // 扣除金币
             $userBags['gold'] -= $snailConf[2];
@@ -269,11 +269,24 @@ class SnailController extends Controller
             $userBags['snailMap'][$idx] = [intval($snailId), 0];
 
             $userBags['snailMap'] = array_values($userBags['snailMap']);
+
+            // 计算价格
+            if (isset($buyNum))
+            {
+                $snailConf = $this->snailModel->getSnailConf();
+
+                $refPrice  = round($this->snailModel->calcSnailPrice($snailConf[$snailId - 1], $buyNum));
+            } else {
+                $refPrice = $snailConf[2];
+            }
+
+        } else {
+            $refPrice = $snailConf[2];
         }
 
         return response()->json(
             array_merge(
-                ['userBags' => $userBags],
+                ['userBags' => $userBags, 'refPrice' => $refPrice],
                 Config::get('constants.SUCCESS')
             )
         );
