@@ -178,6 +178,11 @@ class Snail extends Model
             unset($costType, $costVal, $unlockStatus);
         }
 
+        // 先结算一次金币
+        $userBagModel = new \App\UserBag;
+
+        $userBagModel->settleGold($userId, true);
+
         return $snailList;
 
     }

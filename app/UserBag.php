@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Redis;
 
 class UserBag extends Model
 {
-    protected $table       = 'users_bags';
-    protected $primaryKey  = 'id';
-    public    $timestamps  = false;
+    protected $table = 'users_bags';
+    protected $primaryKey = 'id';
+    public $timestamps = false;
 
     /**
      * 初始化背包
@@ -56,8 +56,7 @@ class UserBag extends Model
 
         $key = $this->_getUserBagKey($userId);
 
-        if(!Redis::exists($key))
-        {
+        if (!Redis::exists($key)) {
             $userBag = UserBag::where('userId', $userId)->first();
 
             if (!$userBag) return array();
@@ -71,15 +70,12 @@ class UserBag extends Model
         $userBag['snailMap'] = [];
 
         // 解析蜗牛数据
-        if ($parseItem)
-        {
+        if ($parseItem) {
 
             $snailData = [];
 
-            foreach($userBag as $k => $v)
-            {
-                if (strstr($k, 'item'))
-                {
+            foreach ($userBag as $k => $v) {
+                if (strstr($k, 'item')) {
                     $idxArr = explode('_', $k);
 
                     $snailData[$idxArr[1]] = json_decode($v, true);
@@ -112,35 +108,7 @@ class UserBag extends Model
         // 消费前，计算当前的产出
         if (isset($update['gold']))
         {
-            $userBagModel    = new \App\UserBag;
-
-            $snailModel      = new \App\Snail;
-
-            $userModel       = new \App\WxUser;
-
-            $userOpTs        = $userModel->getUserOpTs($userId);
-
-            if ($userOpTs)
-            {
-
-                $tsDiff = time() - $userOpTs;
-
-                if ($tsDiff && $tsDiff > 0)
-                {
-                    $userBags        = $userBagModel->getUserBag($userId, true);
-
-                    $snailEarnPerSec = $snailModel->calcSnailEarn($userBags['snailMap']);
-
-                    $earnGold        = round($snailEarnPerSec * $tsDiff);
-
-                    $update['gold'] += $earnGold;
-
-                    $userModel->setUserOpTs($userId, time());
-
-                    Log::info('增加/消耗货币前结算，userId：' . $userId . ', earnGold：' . $earnGold);
-                }
-
-            }
+            $update['gold'] += $this->settleGold($userId, false);
         }
 
         if (!UserBag::where('userId', $userId)->update($update)) return false;
@@ -152,6 +120,57 @@ class UserBag extends Model
         Redis::hmset($key, $update);
 
         return true;
+    }
+
+    /**
+     * 更新金币
+     * @param string $userId
+     * @param bool $update 更新到缓存，是否更新金币，不更新直接返回挣了多少金币
+     * @return bool|float|int
+     */
+    public function settleGold($userId = '', $update = false)
+    {
+        if (!$userId) return false;
+
+        $userModel = new \App\WxUser;
+
+        $userOpTs = $userModel->getUserOpTs($userId);
+
+        $earnGold = 0;
+
+        if ($userOpTs) {
+
+            $tsDiff = time() - $userOpTs;
+
+            if ($tsDiff && $tsDiff > 0) {
+
+                $snailModel = new \App\Snail;
+
+                $userBags = $this->getUserBag($userId, true);
+
+                $snailEarnPerSec = $snailModel->calcSnailEarn($userBags['snailMap']);
+
+                $earnGold = round($snailEarnPerSec * $tsDiff);
+
+                $userModel->setUserOpTs($userId, time());
+
+                // 更新到缓存
+                if ($update)
+                {
+                    $key = $this->_getUserBagKey($userId);
+
+                    $gold = Redis::hget($key, 'gold');
+
+                    Redis::hset($key, 'gold', $gold + $earnGold);
+
+                }
+
+                Log::info('结算产出金币，userId：' . $userId . ', earnGold：' . $earnGold);
+            }
+
+        }
+
+        return $earnGold;
     }
 
     private function _getUserBagKey($userId = '')

@@ -8,7 +8,7 @@
         "php": ">=7.0.0",
         "appstract/laravel-opcache": "^2.0",
         "doctrine/dbal": "^2.7",
-        "encore/laravel-admin": "^1.5",
+        "encore/laravel-admin": "^1.6",
         "fideloper/proxy": "~3.3",
         "guzzlehttp/guzzle": "^6.3",
         "hhxsv5/laravel-s": "~2.0",
@@ -75,5 +75,11 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.org"
+        }
     }
 }

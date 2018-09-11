@@ -194,10 +194,16 @@ class WxUserController extends Controller
         // 设置登录时间
         $this->wxUserModel->setUserOpTs($userId, time());
 
+        // 计算第一只蜗牛需要消耗的钱
+        $buyNum    = $this->snailModel->getUserSnailBuyNums($userId);
+        $snailConf = $this->snailModel->getSnailConf();
+        $refPrice  = round($this->snailModel->calcSnailPrice($snailConf[0], $buyNum));
+
         return response()->json(
             array_merge(
                 array(
                     'sessionId'       => $sessionId,
+                    'refPrice'        => $refPrice,
                     'offlineGold'     => $offlineGold,
                     'snailEarnPerSec' => $snailEarnPerSec,
                     'userBags'        => $userBags,

@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.5.40 on 2018-09-07 21:28:09.
+ * Generated for Laravel 5.5.40 on 2018-09-11 11:33:47.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -13605,6 +13605,17 @@ namespace Encore\Admin\Facades {
     class Admin {
         
         /**
+         * Returns the long version of Laravel-admin.
+         *
+         * @return string The long application version
+         * @static 
+         */ 
+        public static function getLongVersion()
+        {
+            return \Encore\Admin\Admin::getLongVersion();
+        }
+        
+        /**
          * 
          *
          * @param $model
@@ -13640,6 +13651,19 @@ namespace Encore\Admin\Facades {
         public static function tree($model, $callable = null)
         {
             return \Encore\Admin\Admin::tree($model, $callable);
+        }
+        
+        /**
+         * Build show page.
+         *
+         * @param $model
+         * @param mixed $callable
+         * @return \Encore\Admin\Show 
+         * @static 
+         */ 
+        public static function show($model, $callable = null)
+        {
+            return \Encore\Admin\Admin::show($model, $callable);
         }
         
         /**
@@ -13780,6 +13804,38 @@ namespace Encore\Admin\Facades {
         public static function extend($name, $class)
         {
             \Encore\Admin\Admin::extend($name, $class);
+        }
+        
+        /**
+         * 
+         *
+         * @param callable $callback
+         * @static 
+         */ 
+        public static function booting($callback)
+        {
+            return \Encore\Admin\Admin::booting($callback);
+        }
+        
+        /**
+         * 
+         *
+         * @param callable $callback
+         * @static 
+         */ 
+        public static function booted($callback)
+        {
+            return \Encore\Admin\Admin::booted($callback);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function disablePjax()
+        {
+            return \Encore\Admin\Admin::disablePjax();
         }
          
     }

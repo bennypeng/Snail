@@ -30,9 +30,11 @@ class HomeController extends Controller
                     $column->append(Dashboard::extensions());
                 });
 
+                /*
                 $row->column(4, function (Column $column) {
                     $column->append(Dashboard::dependencies());
                 });
+                */
             });
         });
     }
