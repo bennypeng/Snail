@@ -411,7 +411,7 @@ class SnailController extends Controller
             'item_' . $seatId => '[]'
         ];
 
-        Log::info('回收蜗牛，userId: ' . $userId . ', data: ', $data);
+        Log::info('回收蜗牛，userId: ' . $userId . ', data: ', $update);
 
         // 操作失败
         if (!$this->userBagModel->setUserBag($userId, $update))

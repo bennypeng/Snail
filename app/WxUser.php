@@ -13,7 +13,6 @@ class WxUser extends Model
     //public    $timestamps = false;
     //protected $dateFormat = 'U';
 
-
     /**
      * 注册用户
      * @param array $data
