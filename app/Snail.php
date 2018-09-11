@@ -284,9 +284,9 @@ class Snail extends Model
 
         $key = $this->_getUserSnailBuyNumsKey($userId);
 
-        Redis::hincrby($key, $snailId, 1);
+        return Redis::hincrby($key, $snailId, 1);
 
-        return true;
+        //return true;
     }
 
     /**
