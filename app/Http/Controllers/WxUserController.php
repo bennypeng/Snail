@@ -66,16 +66,15 @@ class WxUserController extends Controller
         // 内部错误
         if (isset($sessionData['errcode']) && $sessionData['errcode'])
         {
-            Log::error('/api/login', $sessionData);
+            Log::error('/api/user/login', $sessionData);
             return response()->json(Config::get('constants.INTERNAL_ERROR'));
         }
 
         $openId     = $sessionData['openid'];
         $sessionKey = $sessionData['session_key'];
 
-
         // 数据签名校验
-        if (!$sessionId && $signature != sha1($rawData . $sessionKey))
+        if ($rawData && !$sessionId && $signature != sha1($rawData . $sessionKey))
         {
             return response()->json(Config::get('constants.SIGNATURE_ERROR'));
         }
