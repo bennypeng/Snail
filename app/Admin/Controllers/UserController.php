@@ -38,7 +38,30 @@ class UserController extends Controller
             ->header('用户信息')
             ->description('用户详情')
             ->body(Admin::show(User::findOrFail($id), function (Show $show) {
-                $show->avatarUrl()->image('', 150, 150);
+
+                $show->panel()
+                    ->style('info')
+                    ->title('');
+
+                $show->panel()->tools(function ($tools) {
+                    $tools->disableEdit();
+                    $tools->disableDelete();
+                });
+
+                $show->avatarUrl('头像')->image('', 150, 150);
+                $show->id('用户ID');
+                $show->nickName('昵称');
+                $show->openId();
+                $show->cId('渠道ID');
+                $show->gender('性别')->using(['0' => '未知', '1' => '男', '2' => '女']);
+                $show->language('语言');
+                $show->column('地址')->as(function (){
+                    return array($this->country, $this->province, $this->city);
+                })->badge();
+
+
+                $show->created_at('创建时间');
+                $show->updated_at('修改时间');
             }));
     }
 
@@ -102,15 +125,7 @@ class UserController extends Controller
 
             $grid->language('语言');
 
-//            $grid->country('国家');
-//
-//            $grid->province('省份');
-//
-//            $grid->city('城市');
-
             $grid->created_at('创建时间');
-
-//            $grid->updated_at('更新时间');
 
             $grid->filter(function (Grid\Filter $filter) {
 
@@ -119,8 +134,6 @@ class UserController extends Controller
                 $filter->scope('Female', '女')->where('gender', '=', 2);
 
             });
-
-//            $grid->disableActions();
 
             $grid->disableCreateButton();
 
@@ -131,8 +144,6 @@ class UserController extends Controller
                 $actions->disableDelete();
 
                 $actions->disableEdit();
-
-//                $actions->disableView();
 
             });
         });
