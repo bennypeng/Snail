@@ -61,7 +61,7 @@ class SnailController extends Controller
         $userBags = $this->userBagModel->getUserBag($userId, true);
 
         // 只是更换位置
-        if ( 
+        if (
             (
             (isset($userBags['snailMap'][$from][0]) && !isset($userBags['snailMap'][$to][0]))
             || ($userBags['snailMap'][$from][0] != $userBags['snailMap'][$to][0])
@@ -69,18 +69,20 @@ class SnailController extends Controller
         {
 
             // 蜗牛上阵中
-            if ($userBags['snailMap'][$from][1] == 1)
+            if ($userBags['snailMap'][$from][1] == 1 || (isset($userBags['snailMap'][$to][1]) && $userBags['snailMap'][$to][1] == 1))
             {
                 return response()->json(Config::get('constants.SNAIL_STATUS_ERROR'));
             }
 
             // 更新蜗牛数据
+            $temp = $userBags['snailMap'][$to];
+
             $userBags['snailMap'][$to] = $userBags['snailMap'][$from];
 
-            $userBags['snailMap'][$from] = [];
+            $userBags['snailMap'][$from] = $temp;
 
             $update = [
-                'item_' . $from => '[]',
+                'item_' . $from => isset($temp[0]) ? '[' . $temp[0] . ', ' . $temp[1] .']' : '[]',
                 'item_' . $to   => '[' . $userBags['snailMap'][$to][0] . ', ' . $userBags['snailMap'][$to][1] .']'
             ];
 
