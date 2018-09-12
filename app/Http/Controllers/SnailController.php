@@ -302,7 +302,7 @@ class SnailController extends Controller
 
         return response()->json(
             array_merge(
-                ['userBags' => $userBags, 'refPrice' => $refPrice],
+                ['userBags' => $userBags, 'refPrice' => $refPrice, 'changeSeats' => [$idx => [intval($snailId), 0]]],
                 Config::get('constants.SUCCESS')
             )
         );
