@@ -97,16 +97,16 @@ class UserBagController extends Controller
                     [$this->item_10, $this->item_11, $this->item_12],
                     [$this->item_13, $this->item_14, $this->item_15]
                     ];
-            })->table();
+            })->test();
 
             $grid->filter(function (Grid\Filter $filter) {
 
 
             });
 
-            //$grid->disableCreateButton();
+            $grid->disableCreateButton();
 
-            //$grid->disableRowSelector();
+            $grid->disableRowSelector();
 
             $grid->actions(function (Grid\Displayers\Actions $actions) {
 

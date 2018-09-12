@@ -27,3 +27,9 @@ Column::extend('prependIcon', function ($value, $icon) {
     return "<span style='color: #999;'><i class='fa fa-$icon'></i>  $value</span>";
 
 });
+
+
+Column::extend('test', function ($value = []){
+    return view('admin.snailMap')->with('data', $value);
+    //return json_encode( $value);
+});
