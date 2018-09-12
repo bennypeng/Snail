@@ -84,6 +84,8 @@ class UserBag extends Model
                 }
             }
 
+            ksort($snailData);
+
             $userBag['snailMap'] = $snailData;
 
         }
