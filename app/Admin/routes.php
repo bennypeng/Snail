@@ -14,6 +14,7 @@ Route::group([
 
     $router->resources([
         'users'                 => UserController::class,
+        'bags'                  => UserBagController::class,
     ]);
 
 });

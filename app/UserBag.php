@@ -21,13 +21,15 @@ class UserBag extends Model
     {
         if (!$userId) return false;
 
+        $configModel = new \App\Config;
+
         $data = [
-            'userId' => $userId,
-            'gold' => 100,
-            'diamond' => 0,
-            'item_1' => '[1, 0]',
-            'item_2' => '[]', 'item_3' => '[]', 'item_4' => '[]', 'item_5' => '[]',
-            'item_6' => '[]', 'item_7' => '[]', 'item_8' => '[]', 'item_9' => '[]',
+            'userId'  => $userId,
+            'gold'    => intval($configModel->getConfig('INIT_GOLD')),
+            'diamond' => intval($configModel->getConfig('INIT_DIAMOND')),
+            'item_1'  => '[1, 0]',
+            'item_2'  => '[]', 'item_3' => '[]', 'item_4' => '[]', 'item_5' => '[]',
+            'item_6'  => '[]', 'item_7' => '[]', 'item_8' => '[]', 'item_9' => '[]',
             'item_10' => '[]', 'item_11' => '[]', 'item_12' => '[]',
             'item_13' => '[]', 'item_14' => '[]', 'item_15' => '[]'
         ];

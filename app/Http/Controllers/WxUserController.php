@@ -171,10 +171,13 @@ class WxUserController extends Controller
 
         $userBags['snailMap'] = array_values($userBags['snailMap']);
 
+        $offlineSec = $this->configModel->getConfig('OFFLINE_GAIN_TIME');
+
         // 设置离线半小时收益buff
         if (!$userBuff)
         {
-            $this->shopModel->setUserBuff($userId, 2, 1800);
+
+            $this->shopModel->setUserBuff($userId, 2, $offlineSec);
 
             Log::info('用户增加半小时离线收益1，userId：' . $userId);
         } else {
@@ -184,7 +187,7 @@ class WxUserController extends Controller
 
                 if ($v['endTime'] > time()) continue;
 
-                $this->shopModel->setUserBuff($userId, 2, 1800);
+                $this->shopModel->setUserBuff($userId, 2, $offlineSec);
 
                 Log::info('用户增加半小时离线收益2，userId：' . $userId);
             }

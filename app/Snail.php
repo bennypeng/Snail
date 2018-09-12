@@ -239,8 +239,12 @@ class Snail extends Model
     {
         if (!$snailData) return 0;
 
+        $configModel = new \App\Config;
+
+        $formulaStr = $configModel->getConfig('COST_GOLD_FORMULA');
+
         //  购买次数的价格公式// 计算次数价格
-        $buyNumsFormula  = sprintf('%d * pow(%f, %d) * pow(%f, %d - 1)', $snailData['goldBase'], $snailData['goldFactor'], $snailData['goldPower'], $snailData['costGoldFactor'], $userSnailBuyNums);
+        $buyNumsFormula  = sprintf($formulaStr, $snailData['goldBase'], $snailData['goldFactor'], $snailData['goldPower'], $snailData['costGoldFactor'], $userSnailBuyNums);
 
         $price = eval("return $buyNumsFormula;");
 
@@ -256,12 +260,20 @@ class Snail extends Model
     {
         if (!$snailData) return 0;
 
+        $configModel = new \App\Config;
+
+        $formulaStr = $configModel->getConfig('BUY_GOLD_FORMULA');
+
         //  购买次数的价格公式// 计算次数价格
-        $reclyFormula  = sprintf('%d * pow(%f, %d)', $snailData['goldBase'], $snailData['goldFactor'], $snailData['goldPower']);
+        $reclyFormula  = sprintf($formulaStr, $snailData['goldBase'], $snailData['goldFactor'], $snailData['goldPower']);
 
         $price = eval("return $reclyFormula;");
 
-        $price = round($price * 0.94);
+        $recyFactor = intval($configModel->getConfig('RECYCLE_FACTOR'));
+
+        $recyFactor = !$recyFactor ? 1 : $recyFactor;
+
+        $price = round($price * $recyFactor);
 
         return $price;
     }

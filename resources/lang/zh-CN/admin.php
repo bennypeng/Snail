@@ -13,6 +13,7 @@ return [
     'user_setting'          => '用户设置',
     'avatar'                => '头像',
 
+    'continue_editing' => '继续编辑',
     'detail'       => '详情',
     'search'       => '搜索',
     'list'         => '列表',
