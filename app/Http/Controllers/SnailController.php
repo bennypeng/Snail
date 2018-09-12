@@ -94,9 +94,11 @@ class SnailController extends Controller
                 return response()->json(Config::get('constants.FAILURE'));
             }
 
+            $fromSeat = !isset($userBags['snailMap'][$from][0]) ? [0, 0] : $userBags['snailMap'][$from];
+
             return response()->json(
                 array_merge(
-                    ['userBags' => $userBags, 'changeSeats' => [$from => $userBags['snailMap'][$from], $to => $userBags['snailMap'][$to]]],
+                    ['userBags' => $userBags, 'changeSeats' => [$from => $fromSeat, $to => $userBags['snailMap'][$to]]],
                     Config::get('constants.SUCCESS')
                 )
             );
