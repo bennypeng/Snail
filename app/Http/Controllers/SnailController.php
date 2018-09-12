@@ -61,7 +61,11 @@ class SnailController extends Controller
         $userBags = $this->userBagModel->getUserBag($userId, true);
 
         // 只是更换位置
-        if (isset($userBags['snailMap'][$from][0]) && !isset($userBags['snailMap'][$to][0]) && $to <= 15 && $to >= 1)
+        if ( 
+            (
+            (isset($userBags['snailMap'][$from][0]) && !isset($userBags['snailMap'][$to][0]))
+            || ($userBags['snailMap'][$from][0] != $userBags['snailMap'][$to][0])
+            ) && $to <= 15 && $to >= 1)
         {
 
             // 蜗牛上阵中
