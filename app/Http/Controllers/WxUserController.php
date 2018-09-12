@@ -197,7 +197,7 @@ class WxUserController extends Controller
         // 计算第一只蜗牛需要消耗的钱
         $buyNum    = $this->snailModel->getUserSnailBuyNums($userId);
         $snailConf = $this->snailModel->getSnailConf();
-        $refPrice  = round($this->snailModel->calcSnailPrice($snailConf[0], $buyNum[0]));
+        $refPrice  = round($this->snailModel->calcSnailPrice($snailConf[0], $buyNum[1]));
 
         return response()->json(
             array_merge(
