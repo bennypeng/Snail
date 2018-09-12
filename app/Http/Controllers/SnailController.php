@@ -96,7 +96,7 @@ class SnailController extends Controller
 
             return response()->json(
                 array_merge(
-                    ['userBags' => $userBags],
+                    ['userBags' => $userBags, 'changeSeats' => [$from => $userBags['snailMap'][$from], $to => $userBags['snailMap'][$to]]],
                     Config::get('constants.SUCCESS')
                 )
             );
@@ -155,7 +155,7 @@ class SnailController extends Controller
 
         return response()->json(
             array_merge(
-                ['userBags' => $userBags],
+                ['userBags' => $userBags, 'changeSeats' => [$from => $userBags['snailMap'][$from], $to => $userBags['snailMap'][$to]]],
                 Config::get('constants.SUCCESS')
             )
         );
