@@ -88,7 +88,13 @@ class SnailController extends Controller
                 return response()->json(Config::get('constants.FAILURE'));
             }
 
-            return response()->json(Config::get('constants.SUCCESS'));
+            return response()->json(
+                array_merge(
+                    ['userBags' => $userBags],
+                    Config::get('constants.SUCCESS')
+                )
+            );
+
 
         }
 
