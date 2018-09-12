@@ -64,7 +64,7 @@ class SnailController extends Controller
         if (
             (
             (isset($userBags['snailMap'][$from][0]) && !isset($userBags['snailMap'][$to][0]))
-            || ($userBags['snailMap'][$from][0] != $userBags['snailMap'][$to][0])
+            || (isset($userBags['snailMap'][$from][0]) && isset($userBags['snailMap'][$to][0]) && $userBags['snailMap'][$from][0] != $userBags['snailMap'][$to][0])
             ) && $to <= 15 && $to >= 1)
         {
 
