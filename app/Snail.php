@@ -132,7 +132,7 @@ class Snail extends Model
                     }
                 } else {
                     // 倒数一二只能看剪影
-                    if ($v['id'] > $maxLevel - 2 && $v['id'] <= $maxLevel)
+                    if ($maxLevel != 24 && $v['id'] > $maxLevel - 2 && $v['id'] <= $maxLevel)
                     {
 
                         $unlockStatus = 2;
@@ -164,6 +164,15 @@ class Snail extends Model
 //
 //                        $unlockStatus = 1;
 
+                    } else if ($maxLevel == 24 && $v['id'] > $maxLevel - 2 && $v['id'] <= $maxLevel)
+                    {
+                        // 当达到最大解锁等级，只能用钻石买
+
+                        $costType = 1;
+
+                        $costVal  = $v['diamondPrice'];
+
+                        $unlockStatus = 1;
                     }
                 }
             }
