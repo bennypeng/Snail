@@ -29,7 +29,6 @@ Column::extend('prependIcon', function ($value, $icon) {
 });
 
 
-Column::extend('test', function ($value = []){
+Column::extend('snailMapTable', function ($value = []){
     return view('admin.snailMap')->with('data', $value);
-    //return json_encode( $value);
 });

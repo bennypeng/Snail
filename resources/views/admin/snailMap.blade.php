@@ -1,21 +1,22 @@
-<table class="table" style="margin-bottom: 0;">
-    {{--<thead>--}}
-    {{--<tr>--}}
-        {{--@foreach($titles as $column => $title)--}}
-            {{--<th>{{ $title }}</th>--}}
-        {{--@endforeach--}}
-    {{--</tr>--}}
-    {{--</thead>--}}
+<style>
+    #snailTb td {
+        width: 20px;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+
+<table class="table table-bordered" style="margin-bottom: 0;" id="snailTb">
     <tbody>
     @foreach($data as $k => $datum)
         <tr>
             @foreach($datum as $key => $value)
                 @if($value == '[]')
-                    <td>{{ $value }}</td>
+                    <td class="bg-info">[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]</td>
                 @elseif(strstr($value, '1]'))
-                    <td class="info">{{ $value }}</td>
+                    <td class="bg-primary">{{ $value }}</td>
                 @else
-                    <td class="success">{{ $value }}</td>
+                    <td class="bg-success">{{ $value }}</td>
                 @endif
             @endforeach
         </tr>

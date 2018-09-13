@@ -13,9 +13,13 @@ Route::group([
     //$router->get('/', 'HomeController@index');
 
     $router->resources([
-        '/'                     => UserController::class,
-        'users'                 => UserController::class,
-        'bags'                  => UserBagController::class,
+        '/'                       => UserController::class,
+        //'users'                 => UserController::class,
+        'bags'                    => UserBagController::class,
+        'snails'                  => SnailController::class,
+        'configs'                 => ConfigController::class,
+        'shops'                   => ShopBuffController::class,
+        'dailys'                  => DailyRewardController::class,
     ]);
 
 });

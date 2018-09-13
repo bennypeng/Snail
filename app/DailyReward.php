@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class DailyReward extends Model
@@ -137,6 +138,8 @@ class DailyReward extends Model
             Redis::set($key, 0);
 
             Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
+
+            Log::info(Carbon::now()->endOfDay()->timestamp);
         }
 
         return Redis::get($key);
@@ -154,6 +157,11 @@ class DailyReward extends Model
         $key = $this->_getUserDailyCheckKey($userId);
 
         Redis::set($key, 1);
+
+        /**
+         * @todo 为何set完后过期时间会是-1？
+         */
+        Redis::expireat($key, Carbon::now()->endOfDay()->timestamp);
 
         return true;
     }

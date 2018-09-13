@@ -23,8 +23,8 @@ class UserBagController extends Controller
     public function index(Content $content)
     {
         return $content
-            ->header('Index')
-            ->description('description')
+            ->header('背包管理')
+            ->description('')
             ->body($this->grid());
     }
 
@@ -97,7 +97,7 @@ class UserBagController extends Controller
                     [$this->item_10, $this->item_11, $this->item_12],
                     [$this->item_13, $this->item_14, $this->item_15]
                     ];
-            })->test();
+            })->snailMapTable();
 
             $grid->filter(function (Grid\Filter $filter) {
 
@@ -108,38 +108,19 @@ class UserBagController extends Controller
 
             $grid->disableRowSelector();
 
-            $grid->actions(function (Grid\Displayers\Actions $actions) {
+            $grid->disableActions();
 
-                $actions->disableDelete();
-
-                //$actions->disableEdit();
-
-            });
+//            $grid->actions(function (Grid\Displayers\Actions $actions) {
+//
+//                $actions->disableDelete();
+//
+//                $actions->disableEdit();
+//
+//                $actions->disableView();
+//
+//            });
         });
 
-//        $grid = new Grid(new UserBag);
-//
-//        $grid->id('Id');
-//        $grid->userId('UserId');
-//        $grid->gold('Gold');
-//        $grid->diamond('Diamond');
-//        $grid->item_1('Item 1');
-//        $grid->item_2('Item 2');
-//        $grid->item_3('Item 3');
-//        $grid->item_4('Item 4');
-//        $grid->item_5('Item 5');
-//        $grid->item_6('Item 6');
-//        $grid->item_7('Item 7');
-//        $grid->item_8('Item 8');
-//        $grid->item_9('Item 9');
-//        $grid->item_10('Item 10');
-//        $grid->item_11('Item 11');
-//        $grid->item_12('Item 12');
-//        $grid->item_13('Item 13');
-//        $grid->item_14('Item 14');
-//        $grid->item_15('Item 15');
-//
-//        return $grid;
     }
 
     /**
