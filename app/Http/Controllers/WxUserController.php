@@ -207,6 +207,7 @@ class WxUserController extends Controller
                     'sessionId'       => $sessionId,
                     'refPrice'        => $refPrice,
                     'offlineGold'     => $offlineGold,
+                    'maxLevel'        => $this->snailModel->getUserSnailMaxLevel($userId);
                     'snailEarnPerSec' => $snailEarnPerSec,
                     'userBags'        => $userBags,
                     'userBuff'        => $userBuff,
