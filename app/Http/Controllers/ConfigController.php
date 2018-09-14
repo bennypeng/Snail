@@ -209,7 +209,7 @@ class ConfigController extends Controller
             }
 
             // 增加增益效果
-            $this->shopModel->setUserBuff($userId, $buffConf['buffType'], $buffConf['timeSec']);
+            $this->shopModel->setUserBuff($userId, $buffConf['buffType'], 180);
 
             // 增加分享次数
             $this->shopModel->incrUserShopShareNums($userId);
