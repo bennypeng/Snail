@@ -206,6 +206,7 @@ class WxUserController extends Controller
                 array(
                     'sessionId'       => $sessionId,
                     'refPrice'        => $refPrice,
+                    'weekGold'        => $this->userBagModel->incrUserWeekGold($userId, $offlineGold),
                     'offlineGold'     => $offlineGold,
                     'maxLevel'        => $this->snailModel->getUserSnailMaxLevel($userId),
                     'snailEarnPerSec' => $snailEarnPerSec,

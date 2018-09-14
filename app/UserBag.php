@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
@@ -177,8 +178,34 @@ class UserBag extends Model
         return $earnGold;
     }
 
+    /**
+     * 增加周增加的金币
+     * @param string $userId
+     * @param int $gold
+     * @return int
+     */
+    public function incrUserWeekGold($userId = '', $gold = 0)
+    {
+        if (!$userId || !$gold) return 0;
+
+        $key = $this->_getUserWeekGoldKey($userId);
+
+        if (!Redis::exists($key))
+        {
+            Redis::set($key, 0);
+            Redis::expireat($key, Carbon::now()->endOfWeek()->timestamp);
+        }
+
+        return Redis::incrby($key, $gold);
+    }
+
     private function _getUserBagKey($userId = '')
     {
         return 'U_BAG_' . $userId;
+    }
+
+    private function _getUserWeekGoldKey($userId = '')
+    {
+        return 'U_WEEK_GOLD_' . $userId;
     }
 }
