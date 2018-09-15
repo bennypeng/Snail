@@ -364,7 +364,7 @@ class ShopBuff extends Model
      */
     public function checkUserDoubleNums($userId = '', $openGId = '')
     {
-        if (!$userId || $openGId) return false;
+        if (!$userId || !$openGId) return false;
 
         $key = $this->_getUserDoubleCheckKey($userId);
 

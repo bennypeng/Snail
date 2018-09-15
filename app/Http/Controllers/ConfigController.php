@@ -275,6 +275,14 @@ class ConfigController extends Controller
 
         $iv            = $req->get('iv', '');
 
+//        $pc = new WXBizDataCrypt(env('APPID'), 'p2wKq+3ULEXiCukMKwJC1Q==');
+//
+//        $errCode = $pc->decryptData('G4UEPTJgKGDumSz2OzzZFD/VLNpA6ssaG/0Gv8jLGNxrEmCbew1D2trHsVOmG+TGn85tQTn7sRsROS78mJO2/+c9zCMuaG/H5OtWVmuu2X23LpXjjkm/R3d841AgVUiHG1AyOWFqbTelJj4aM6AX2Q==',
+//            'bQxDZk0Q3TiWJVxvlt63Tg==', $data );
+//        dd($errCode, $data);
+//
+//        exit;
+
         // 缺少参数
         if (!$encryptedData || !$iv || !$sessionId)
         {
