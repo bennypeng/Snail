@@ -77,7 +77,7 @@ class UserBag extends Model
             $userBag = $userBag->toArray();
         }
 
-Log::info('aaa', $userBag->toArray());
+Log::info('aaa', $userBag);
         // 解析蜗牛数据
         if ($parseItem) {
 
