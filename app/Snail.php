@@ -64,13 +64,15 @@ class Snail extends Model
 
         $snailConf = $this->getSnailConf();
 
-        $userSnailBuyNumsArr = $this->getUserSnailBuyNums($userId);
+        $userSnailGoldBuyNumsArr = $this->getUserSnailBuyNums($userId);
+
+        $userSnailDiamondBuyNumsArr = $this->getUserSnailBuyNums($userId, 1);
 
         $maxLevel = $this->getUserSnailMaxLevel($userId);
 
         $maxLevel = !$maxLevel ? 1 : $maxLevel;
 
-        if (!$maxLevel || !$userSnailBuyNumsArr || !$snailConf) return array();
+        if (!$maxLevel || !$userSnailGoldBuyNumsArr || !$userSnailDiamondBuyNumsArr || !$snailConf) return array();
 
         $snailList = [];
 
@@ -86,7 +88,7 @@ class Snail extends Model
             }
 
             // 不存在蜗牛
-            if (!isset($userSnailBuyNumsArr[$v['id']]))
+            if (!isset($userSnailGoldBuyNumsArr[$v['id']]) || !isset($userSnailDiamondBuyNumsArr[$v['id']]))
             {
                 $costType     = 1;
 
@@ -100,7 +102,7 @@ class Snail extends Model
             if ($v['diamondPrice'] == -1 || $v['goldUnlockId'] <= $maxLevel)
             {
                 // 对应的蜗牛购买了几次
-                $userSnailBuyNums = isset($userSnailBuyNumsArr[$v['id']]) ? $userSnailBuyNumsArr[$v['id']] : 1;
+                $userSnailBuyNums = $userSnailGoldBuyNumsArr[$v['id']];
 
                 // 计算次数价格
                 $numsPrice = $this->calcSnailPrice($v, $userSnailBuyNums);
@@ -114,9 +116,17 @@ class Snail extends Model
             } else {
                 // 用钻石买的
 
+                // 对应的蜗牛购买了几次
+                $userSnailBuyNums = $userSnailDiamondBuyNumsArr[$v['id']];
+
+                // 计算次数价格
+                $numsPrice = $this->calcSnailDiamondPrice($v, $userSnailBuyNums);
+
                 $costType     = 1;
 
-                $costVal      = $v['diamondPrice'];
+                //$costVal      = $v['diamondPrice'];
+
+                $costVal      = round($numsPrice);
 
                 $unlockStatus = $v['diamondUnlockId'] <= $maxLevel && $v['diamondPrice'] != -1 ? 1 : 0;;
             }
@@ -145,7 +155,11 @@ class Snail extends Model
                         {
                             $costType = 1;
 
-                            $costVal  = $v['diamondPrice'];
+                            $numsPrice = $this->calcSnailDiamondPrice($v, $userSnailBuyNums);
+
+                            $costVal  = round($numsPrice);
+
+                            //$costVal  = $v['diamondPrice'];
 
                             $unlockStatus = 1;
 
@@ -278,17 +292,32 @@ class Snail extends Model
         return $price;
     }
 
+    /**
+     * 钻石价格计算
+     * @param array $snailData
+     * @param int $userSnailBuyNums
+     * @return float|int
+     */
+    public function calcSnailDiamondPrice($snailData = [], $userSnailBuyNums = 1)
+    {
+        if (!$snailData) return 0;
+
+        $price = $snailData['diamondPrice'] * pow(1.2, $userSnailBuyNums - 1);
+
+        return $price;
+    }
 
     /**
      * 获取用户购买蜗牛次数的集合
      * @param string $userId
+     * @param int $type 1钻石2金币
      * @return array
      */
-    public function getUserSnailBuyNums($userId = '')
+    public function getUserSnailBuyNums($userId = '', $type = 2)
     {
         if (!$userId) return array();
 
-        $key = $this->_getUserSnailBuyNumsKey($userId);
+        $key = $type == 1 ? $this->_getUserSnailDiamondBuyNumsKey($userId) : $this->_getUserSnailGoldBuyNumsKey($userId);
 
         if (!Redis::exists($key))
         {
@@ -302,17 +331,17 @@ class Snail extends Model
      * 设置对应用户蜗牛的购买次数
      * @param string $userId
      * @param string $snailId
-     * @return int
+     * @param int $type 1钻石2金币
+     * @return bool
      */
-    public function setUserSnailBuyNums($userId= '', $snailId = '')
+    public function setUserSnailBuyNums($userId= '', $snailId = '', $type = 2)
     {
         if (!$userId || !$snailId) return false;
 
-        $key = $this->_getUserSnailBuyNumsKey($userId);
+        $key = $type == 1 ? $this->_getUserSnailDiamondBuyNumsKey($userId) : $this->_getUserSnailGoldBuyNumsKey($userId);
 
         return Redis::hincrby($key, $snailId, 1);
 
-        //return true;
     }
 
     /**
@@ -405,9 +434,14 @@ class Snail extends Model
         return 'CONFIG_SNAIL';
     }
 
-    private function _getUserSnailBuyNumsKey($userId = '')
+    private function _getUserSnailGoldBuyNumsKey($userId = '')
     {
-        return 'U_SNAIL_NUMS_' . $userId;
+        return 'U_SNAIL_GOLD_NUMS_' . $userId;
+    }
+
+    private function _getUserSnailDiamondBuyNumsKey($userId = '')
+    {
+        return 'U_SNAIL_DIAMOND_NUMS_' . $userId;
     }
 
     private function _getUserMaxSnailKey($userId = '')

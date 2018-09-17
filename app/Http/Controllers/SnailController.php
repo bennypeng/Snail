@@ -222,6 +222,9 @@ class SnailController extends Controller
                 return response()->json(Config::get('constants.DIAMOND_NOT_ENOUGH'));
             }
 
+            // 增加蜗牛的购买次数
+            $buyNum = $this->snailModel->setUserSnailBuyNums($userId, $snailId, 1);
+
             // 扣除钻石
             $userBags['diamond'] -= $snailConf[2];
             $update = [
@@ -302,7 +305,11 @@ class SnailController extends Controller
 
         return response()->json(
             array_merge(
-                ['userBags' => $userBags, 'refPrice' => $refPrice, 'changeSeats' => [$idx => [intval($snailId), 0]]],
+                [
+                    'userBags' => $userBags,
+                    'refPrice' => $refPrice,
+                    'changeSeats' => [$idx => [intval($snailId), 0]]
+                ],
                 Config::get('constants.SUCCESS')
             )
         );
