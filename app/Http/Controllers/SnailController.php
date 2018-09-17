@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\HelperService;
 use App\UserBag;
 use App\Snail;
 use Illuminate\Http\Request;
@@ -464,6 +465,88 @@ class SnailController extends Controller
         return response()->json(
             array_merge(
                 ['userBags' => $userBags],
+                Config::get('constants.SUCCESS')
+            )
+        );
+    }
+
+    public function pack(Request $req)
+    {
+        $userId = $req->get('userId', '');
+
+        $seatId = $req->get('seatId', '');
+
+        // 参数错误
+        if (!$seatId)
+        {
+            return response()->json(Config::get('constants.ARGS_ERROR'));
+        }
+
+        $userBags = $this->userBagModel->getUserBag($userId, true);
+
+        // 位置不空，位置信息错误
+        if ($userBags['snailMap'][$seatId])
+        {
+            return response()->json(Config::get('constants.SEAT_ERROR'));
+        }
+
+        // 临时写的，当前等级可生成集装箱蜗牛
+        $confArr = [
+            1  => [1 => 100],
+            2  => [1 => 100],
+            3  => [1 => 100],
+            4  => [1 => 80, 2 => 20],
+            5  => [1 => 80, 2 => 20],
+            6  => [1 => 50, 2 => 40, 3 => 10],
+            7  => [1 => 40, 2 => 40, 3 => 20],
+            8  => [1 => 30, 2 => 40, 3 => 20, 4 => 10],
+            9  => [1 => 20, 2 => 40, 3 => 20, 4 => 20],
+            10 => [1 => 20, 2 => 20, 3 => 20, 4 => 30, 5 => 10],
+            11 => [2 => 30, 3 => 30, 4 => 20, 5 => 20],
+            12 => [2 => 20, 3 => 20, 4 => 20, 5 => 30, 6 => 10],
+            13 => [3 => 30, 4 => 30, 5 => 20, 6 => 20],
+            14 => [3 => 20, 4 => 20, 5 => 20, 6 => 30, 7 => 10],
+            15 => [4 => 30, 5 => 30, 6 => 20, 7 => 20],
+            16 => [4 => 20, 5 => 20, 6 => 20, 7 => 30, 8 => 10],
+            17 => [5 => 30, 6 => 30, 7 => 20, 8 => 20],
+            18 => [5 => 20, 6 => 20, 7 => 20, 8 => 30, 9 => 10],
+            19 => [6 => 30, 7 => 30, 8 => 20, 9 => 20],
+            20 => [6 => 20, 7 => 30, 8 => 30, 9 => 10, 10 => 10],
+            21 => [7 => 30, 8 => 30, 9 => 20, 10 => 20],
+            22 => [7 => 40, 8 => 30, 9 => 10, 10 => 10, 11 => 10],
+            23 => [8 => 30, 9 => 30, 10 => 20, 11 => 20],
+            24 => [8 => 40, 9 => 30, 10 => 10, 11 => 10, 12 => 10],
+        ];
+
+        $maxLevel = $this->snailModel->getUserSnailMaxLevel($userId);
+
+        // 没有找到概率配置
+        if (!isset($confArr[$maxLevel]))
+        {
+            return response()->json(Config::get('constants.CONF_ERROR'));
+        }
+
+        $helper = new HelperService();
+
+        $snailId = $helper->getRandomByWeight($confArr[$maxLevel]);
+
+        $update = [
+            'item_' . $seatId => '[' . $snailId . ', 0]'
+        ];
+
+        // 操作失败
+        if (!$this->userBagModel->setUserBag($userId, $update))
+        {
+            return response()->json(Config::get('constants.FAILURE'));
+        }
+
+        Log::info('集装箱增加蜗牛，userId: ' . $userId . ', data: ', $update);
+
+        return response()->json(
+            array_merge(
+                [
+                    'changeSeats' => [$seatId => [intval($snailId), 0]]
+                ],
                 Config::get('constants.SUCCESS')
             )
         );

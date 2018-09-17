@@ -45,6 +45,9 @@ Route::group(['middleware' => 'skey'], function() {
     //  回收蜗牛
     Route::post('snail/recly', 'SnailController@recly');
 
+    //  集装箱增加蜗牛
+    Route::post('snail/pack', 'SnailController@pack');
+
     //  分享领取双倍收益
     Route::get('conf/double', 'ConfigController@double');
 });
