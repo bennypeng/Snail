@@ -13,6 +13,7 @@ Route::group([
     //$router->get('/', 'HomeController@index');
 
     $router->resources([
+        '/'                       => UserBagController::class,
         'users'                   => UserController::class,
         'bags'                    => UserBagController::class,
         'snails'                  => SnailController::class,
