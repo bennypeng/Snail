@@ -383,6 +383,51 @@ class ShopBuff extends Model
         return true;
     }
 
+
+    /**
+     * 检测用户进入分享领取钻石的状态
+     * @param string $userId
+     * @param string $openGId
+     * @return bool
+     */
+    public function checkUserDiamondNums($userId = '', $openGId = '')
+    {
+        if (!$userId || !$openGId) return false;
+
+        $key = $this->_getUserDiamondCheckKey($userId);
+
+        if (Redis::exists($key)) {
+
+            $data = Redis::hget($key, $openGId);
+
+            if ($data >= 1) return false;
+
+        } else {
+
+            Redis::hset($key, $openGId, 0);
+
+        }
+
+        return true;
+    }
+
+    /**
+     * 增加用户今日分享领取钻石的次数
+     * @param string $userId
+     * @param string $openGId
+     * @return bool
+     */
+    public function incrUserDiamondNums($userId = '', $openGId = '')
+    {
+        if (!$userId || $openGId) return false;
+
+        $key = $this->_getUserDiamondCheckKey($userId);
+
+        Redis::hincrby($key, $openGId, 1);
+
+        return true;
+    }
+
     private function _getBuffShopKey()
     {
         return 'CONFIG_BUFF_SHOP';
@@ -406,6 +451,11 @@ class ShopBuff extends Model
     private function _getUserDoubleCheckKey($userId = '')
     {
         return 'U_BUFF_DOUBLE_CHECK_' . $userId;
+    }
+
+    private function _getUserDiamondCheckKey($userId = '')
+    {
+        return 'U_BUFF_DIAMOND_CHECK_' . $userId;
     }
 
 }

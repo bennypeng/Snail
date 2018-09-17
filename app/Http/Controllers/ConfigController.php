@@ -335,4 +335,69 @@ class ConfigController extends Controller
         return response()->json(Config::get('constants.SUCCESS'));
     }
 
+    /**
+     * 分享到群领取钻石
+     * @param Request $req
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function diamond(Request $req)
+    {
+        $userId        = $req->get('userId', '');
+
+        $sessionId     = $req->header('sessionId', '');
+
+        $encryptedData = $req->get('encryptedData', '');
+
+        $iv            = $req->get('iv', '');
+
+        // 缺少参数
+        if (!$encryptedData || !$iv || !$sessionId)
+        {
+            return response()->json(Config::get('constants.ARGS_ERROR'));
+        }
+
+        $sessionKey = $this->wxUserModel->getSKeyBySessionId($sessionId);
+
+        // 获取sessionKey失败
+        if (!$sessionKey)
+        {
+            return response()->json(Config::get('constants.SESSIONKEY_ERROR'));
+        }
+
+        $pc = new WXBizDataCrypt(env('APPID'), $sessionKey);
+
+        $errCode = $pc->decryptData($encryptedData, $iv, $data );
+
+        // 解密失败
+        if ($errCode != 0) {
+
+            Log::error(sprintf('解密失败，userId：%s，sessionId：%s，encryptedData：%s，iv：%s', $userId, $sessionId, $encryptedData, $iv));
+
+            return response()->json(Config::get('constants.DECODE_ERROR'));
+
+        }
+
+        $dataArr = json_decode($data, true);
+
+        Log::info('解密数据：', $dataArr);
+
+        $openGId = $dataArr['openGId'];
+
+        // 超出领取次数
+        if (!$this->shopModel->checkUserDiamondNums($userId, $openGId))
+        {
+            return response()->json(Config::get('constants.FAILURE'));
+        }
+
+        $userBags = $this->userBagModel->getUserBag($userId);
+
+        $update = ['diamond' => 180 + $userBags['diamond']];
+
+        $this->userBagModel->setUserBag($userId, $update);
+
+        $this->shopModel->incrUserDiamondNums($userId);
+
+        return response()->json(Config::get('constants.SUCCESS'));
+    }
+
 }
