@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin\Extensions\Tools\DropDown;
 use App\Services\HelperService;
 use App\UserBag;
 use App\Snail;
@@ -293,11 +294,11 @@ class SnailController extends Controller
             // 计算价格
             if (isset($buyNum))
             {
-                $snailConf = $this->snailModel->getSnailConf();
-
+                $snailArrConf = $this->snailModel->getSnailConf();
+//dd($snailConf);
                 $refPrice = $snailConf[1] == 2
-                    ? round($this->snailModel->calcSnailPrice($snailConf[$snailId - 1], $buyNum))
-                    : round($this->snailModel->calcSnailDiamondPrice($snailConf[$snailId - 1], $buyNum));
+                    ? round($this->snailModel->calcSnailPrice($snailArrConf[$snailId - 1], $buyNum))
+                    : round($this->snailModel->calcSnailDiamondPrice($snailArrConf[$snailId - 1], $buyNum));
 
                 //$refPrice  = round($this->snailModel->calcSnailPrice($snailConf[$snailId - 1], $buyNum));
             } else {
