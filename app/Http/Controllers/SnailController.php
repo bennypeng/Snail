@@ -294,7 +294,11 @@ class SnailController extends Controller
             {
                 $snailConf = $this->snailModel->getSnailConf();
 
-                $refPrice  = round($this->snailModel->calcSnailPrice($snailConf[$snailId - 1], $buyNum));
+                $refPrice = $snailConf[1] == 2
+                    ? round($this->snailModel->calcSnailPrice($snailConf[$snailId - 1], $buyNum))
+                    : round($this->snailModel->calcSnailDiamondPrice($snailConf[$snailId - 1], $buyNum));
+
+                //$refPrice  = round($this->snailModel->calcSnailPrice($snailConf[$snailId - 1], $buyNum));
             } else {
                 $refPrice = $snailConf[2];
             }
