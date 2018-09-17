@@ -71,7 +71,13 @@ class UserBag extends Model
         }
 
         $userBag['snailMap'] = [];
-Log::info('aaa', $userBag);
+
+        if (!is_array($userBag))
+        {
+            $userBag = $userBag->toArray();
+        }
+
+Log::info('aaa', $userBag->toArray());
         // 解析蜗牛数据
         if ($parseItem) {
 
