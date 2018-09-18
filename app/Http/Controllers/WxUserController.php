@@ -167,12 +167,12 @@ class WxUserController extends Controller
         $snailEarnPerSec = $this->snailModel->calcSnailEarn($userBags['snailMap']);
         $adConfig        = $this->configModel->getConfig('AUDIT_SWITCH');
 
-        $adConfig = json_decode($adConfig);
+        $adConfig = json_decode($adConfig, true);
 
         // 如果领取过登录分享钻石的话，关闭这个按钮
         if (isset($adConfig['LOGIN_SHARE']) && $adConfig['LOGIN_SHARE'] == 1)
         {
-            if (!$this->shopModel->checkUserDiamondNums($userId))
+            if (!$this->shopModel->checkUserDiamondNums($userId, 'login_share_reward'))
             {
                 $adConfig['LOGIN_SHARE'] = 0;
             }

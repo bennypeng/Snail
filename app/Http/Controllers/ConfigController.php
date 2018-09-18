@@ -298,7 +298,7 @@ class ConfigController extends Controller
         // 解密失败
         if ($errCode != 0) {
 
-            Log::error(sprintf('解密失败，userId：%s，sessionId：%s，encryptedData：%s，iv：%s', $userId, $sessionId, $encryptedData, $iv));
+            Log::error(sprintf('解密失败1，userId：%s，sessionId：%s，encryptedData：%s，iv：%s', $userId, $sessionId, $encryptedData, $iv));
 
             return response()->json(Config::get('constants.DECODE_ERROR'));
 
@@ -373,7 +373,7 @@ class ConfigController extends Controller
         // 解密失败
         if ($errCode != 0) {
 
-            Log::error(sprintf('解密失败，userId：%s，sessionId：%s，encryptedData：%s，iv：%s', $userId, $sessionId, $encryptedData, $iv));
+            Log::error(sprintf('解密失败2，userId：%s，sessionId：%s，encryptedData：%s，iv：%s', $userId, $sessionId, $encryptedData, $iv));
 
             return response()->json(Config::get('constants.DECODE_ERROR'));
 
@@ -383,10 +383,10 @@ class ConfigController extends Controller
 
         Log::info('解密数据2：', $dataArr);
 
-        $openGId = $dataArr['openGId'];
+        //$openGId = $dataArr['openGId'];
 
         // 超出领取次数
-        if (!$this->shopModel->checkUserDiamondNums($userId))
+        if (!$this->shopModel->checkUserDiamondNums($userId, 'login_share_reward'))
         {
             return response()->json(Config::get('constants.FAILURE'));
         }
@@ -399,7 +399,7 @@ class ConfigController extends Controller
 
         $this->userBagModel->setUserBag($userId, $update);
 
-        $this->shopModel->incrUserDiamondNums($userId);
+        $this->shopModel->incrUserDiamondNums($userId, 'login_share_reward');
 
         return response()->json(Config::get('constants.SUCCESS'));
     }

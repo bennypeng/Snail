@@ -471,6 +471,11 @@ class SnailController extends Controller
         );
     }
 
+    /**
+     * 集装箱增加蜗牛
+     * @param Request $req
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function pack(Request $req)
     {
         $userId = $req->get('userId', '');
@@ -496,8 +501,8 @@ class SnailController extends Controller
             1  => [1 => 100],
             2  => [1 => 100],
             3  => [1 => 100],
-            4  => [1 => 80, 2 => 20],
-            5  => [1 => 80, 2 => 20],
+            4  => [1 => 90, 2 => 10],
+            5  => [1 => 90, 2 => 10],
             6  => [1 => 50, 2 => 40, 3 => 10],
             7  => [1 => 40, 2 => 40, 3 => 20],
             8  => [1 => 30, 2 => 40, 3 => 20, 4 => 10],
