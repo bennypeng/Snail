@@ -49,7 +49,7 @@ Route::group(['middleware' => 'skey'], function() {
     Route::post('snail/pack', 'SnailController@pack');
 
     //  分享领取钻石
-    Route::get('conf/diamond', 'ConfigController@diamond');
+    Route::get('conf/first', 'ConfigController@first');
 
     //  分享领取双倍收益
     Route::get('conf/double', 'ConfigController@double');

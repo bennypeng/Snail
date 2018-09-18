@@ -342,7 +342,7 @@ class ConfigController extends Controller
      * @param Request $req
      * @return \Illuminate\Http\JsonResponse
      */
-    public function diamond(Request $req)
+    public function first(Request $req)
     {
         $userId        = $req->get('userId', '');
 
