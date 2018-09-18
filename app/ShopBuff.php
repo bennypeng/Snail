@@ -404,7 +404,7 @@ class ShopBuff extends Model
 
         } else {
 
-            Redis::set($key, $type, 0);
+            Redis::hset($key, $type, 0);
 
         }
 
