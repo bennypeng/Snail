@@ -79,6 +79,12 @@ class WxUserController extends Controller
             return response()->json(Config::get('constants.SIGNATURE_ERROR'));
         }
 
+        // 更新sessionKey
+        $key = $this->wxUserModel->getUserSessionIdKey($sessionId);
+        $this->wxUserModel->setUserSessionId($key, [
+            'session_key' => $sessionKey
+        ]);
+        
         // 判断sessionId的合法性
         if ($sessionId && $sessionId != 'undefined')
         {
