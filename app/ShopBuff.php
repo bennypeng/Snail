@@ -428,6 +428,46 @@ class ShopBuff extends Model
         return true;
     }
 
+    public function checkUserCycDiamondNums($userId = '')
+    {
+
+        /**
+         * @todo
+         */
+        if (!$userId) return false;
+
+        $key = $this->_getUserCycDiamondCheckKey($userId);
+
+        if (Redis::exists($key)) {
+
+            $data = Redis::hget($key, $type);
+
+            if ($data >= 1) return false;
+
+        } else {
+
+            Redis::hset($key, $type, 0);
+
+        }
+
+        return true;
+    }
+
+    public function incrUserCycDiamondNums($userId = '', $type = '')
+    {
+
+        /**
+         * @todo
+         */
+        if (!$userId || !$type) return false;
+
+        $key = $this->_getUserCycDiamondCheckKey($userId);
+
+        Redis::hincrby($key, $type, 1);
+
+        return true;
+    }
+
     private function _getBuffShopKey()
     {
         return 'CONFIG_BUFF_SHOP';
@@ -456,6 +496,11 @@ class ShopBuff extends Model
     private function _getUserDiamondCheckKey($userId = '')
     {
         return 'U_BUFF_DIAMOND_CHECK_' . $userId;
+    }
+
+    private function _getUserCycDiamondCheckKey($userId = '')
+    {
+        return 'U_BUFF_CYC_DIAMOND_CHECK_' . $userId;
     }
 
 }

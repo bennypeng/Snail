@@ -146,6 +146,7 @@ class WxUserController extends Controller
                     }
                 } else {
                     // 解密失败
+                    Log::error(sprintf('sessionKey: %s, encryptedData: %s, iv: %s, errcode: %s', $sessionKey, $encryptedData, $iv, $errCode));
                     return response()->json(Config::get('constants.DECODE_ERROR'));
                 }
             } else {

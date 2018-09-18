@@ -54,6 +54,9 @@ Route::group(['middleware' => 'skey'], function() {
     //  钻石不足分享领取钻石
     Route::get('conf/diamond', 'ConfigController@diamond');
 
+    //  分享领取钻石，12小时一次
+    Route::get('conf/cycdiamond', 'ConfigController@cycDiamond');
+
     //  分享领取双倍收益
     Route::get('conf/double', 'ConfigController@double');
 });
