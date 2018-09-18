@@ -7,6 +7,7 @@ use App\UserBag;
 use App\DailyReward;
 use App\ShopBuff;
 use App\Snail;
+use Carbon\Carbon;
 use WXBizDataCrypt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -400,6 +401,75 @@ class ConfigController extends Controller
         $this->userBagModel->setUserBag($userId, $update);
 
         $this->shopModel->incrUserDiamondNums($userId, 'login_share_reward');
+
+        return response()->json(Config::get('constants.SUCCESS'));
+    }
+
+    /**
+     * 钻石不足分享领取钻石
+     * @param Request $req
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function diamond(Request $req)
+    {
+        $userId        = $req->get('userId', '');
+
+        $sessionId     = $req->header('sessionId', '');
+
+        $encryptedData = $req->get('encryptedData', '');
+
+        $iv            = $req->get('iv', '');
+
+        // 缺少参数
+        if (!$encryptedData || !$iv || !$sessionId)
+        {
+            return response()->json(Config::get('constants.ARGS_ERROR'));
+        }
+
+        $sessionKey = $this->wxUserModel->getSKeyBySessionId($sessionId);
+
+        // 获取sessionKey失败
+        if (!$sessionKey)
+        {
+            return response()->json(Config::get('constants.SESSIONKEY_ERROR'));
+        }
+
+        $pc = new WXBizDataCrypt(env('APPID'), $sessionKey);
+
+        $errCode = $pc->decryptData($encryptedData, $iv, $data );
+
+        // 解密失败
+        if ($errCode != 0) {
+
+            Log::error(sprintf('解密失败3，userId：%s，sessionId：%s，encryptedData：%s，iv：%s', $userId, $sessionId, $encryptedData, $iv));
+
+            return response()->json(Config::get('constants.DECODE_ERROR'));
+
+        }
+
+        $dataArr = json_decode($data, true);
+
+        Log::info('解密数据3：', $dataArr);
+
+        //$openGId = $dataArr['openGId'];
+
+        $key = Carbon::now()->format('Ymd') . '_DIAMOND' ;
+
+        // 超出领取次数
+        if (!$this->shopModel->checkUserDiamondNums($userId, $key))
+        {
+            return response()->json(Config::get('constants.FAILURE'));
+        }
+
+        $userBags = $this->userBagModel->getUserBag($userId);
+
+        Log::info('钻石不足分享领取钻石，userId: ' . $userId . ', diamond: 80');
+
+        $update = ['diamond' => 80 + $userBags['diamond']];
+
+        $this->userBagModel->setUserBag($userId, $update);
+
+        $this->shopModel->incrUserDiamondNums($userId, $key);
 
         return response()->json(Config::get('constants.SUCCESS'));
     }

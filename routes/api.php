@@ -48,8 +48,11 @@ Route::group(['middleware' => 'skey'], function() {
     //  集装箱增加蜗牛
     Route::post('snail/pack', 'SnailController@pack');
 
-    //  分享领取钻石
+    //  首次登陆分享领取钻石
     Route::get('conf/first', 'ConfigController@first');
+
+    //  钻石不足分享领取钻石
+    Route::get('conf/diamond', 'ConfigController@diamond');
 
     //  分享领取双倍收益
     Route::get('conf/double', 'ConfigController@double');
