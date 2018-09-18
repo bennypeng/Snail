@@ -138,7 +138,7 @@ class ConfigController extends Controller
             return response()->json(Config::get('constants.FAILURE'));
         }
 
-        Log::info('领取每日奖励，userId: ' . $userId . ', day: ' . $day);
+        Log::info('领取每日奖励，userId: ' . $userId . ', day: ' . $day . ', reward: ' , $dailyReward);
 
         $userBags['snailMap'] = array_values($userBags['snailMap']);
 
@@ -306,7 +306,7 @@ class ConfigController extends Controller
 
         $dataArr = json_decode($data, true);
 
-        Log::info('解密数据：', $dataArr);
+        Log::info('解密数据1：', $dataArr);
 
         $openGId = $dataArr['openGId'];
 
@@ -325,6 +325,8 @@ class ConfigController extends Controller
         }
 
         $userBags = $this->userBagModel->getUserBag($userId);
+
+        Log::info('分享领取双倍收益，userId: ' . $userId . ', earnGold: ' . $earnGold);
 
         $update = ['gold' => $earnGold + $userBags['gold']];
 
@@ -379,17 +381,19 @@ class ConfigController extends Controller
 
         $dataArr = json_decode($data, true);
 
-        Log::info('解密数据：', $dataArr);
+        Log::info('解密数据2：', $dataArr);
 
         $openGId = $dataArr['openGId'];
 
         // 超出领取次数
-        if (!$this->shopModel->checkUserDiamondNums($userId, $openGId))
+        if (!$this->shopModel->checkUserDiamondNums($userId))
         {
             return response()->json(Config::get('constants.FAILURE'));
         }
 
         $userBags = $this->userBagModel->getUserBag($userId);
+
+        Log::info('首次登陆分享领取钻石，userId: ' . $userId . ', diamond: 180');
 
         $update = ['diamond' => 180 + $userBags['diamond']];
 

@@ -169,6 +169,15 @@ class WxUserController extends Controller
 
         $adConfig = json_decode($adConfig);
 
+        // 如果领取过登录分享钻石的话，关闭这个按钮
+        if (isset($adConfig['LOGIN_SHARE']) && $adConfig['LOGIN_SHARE'] == 1)
+        {
+            if (!$this->shopModel->checkUserDiamondNums($userId))
+            {
+                $adConfig['LOGIN_SHARE'] = 0;
+            }
+        }
+
         $userBags['snailMap'] = array_values($userBags['snailMap']);
 
         $offlineSec = $this->configModel->getConfig('OFFLINE_GAIN_TIME');

@@ -390,21 +390,21 @@ class ShopBuff extends Model
      * @param string $openGId
      * @return bool
      */
-    public function checkUserDiamondNums($userId = '', $openGId = '')
+    public function checkUserDiamondNums($userId = '')
     {
-        if (!$userId || !$openGId) return false;
+        if (!$userId) return false;
 
         $key = $this->_getUserDiamondCheckKey($userId);
 
         if (Redis::exists($key)) {
 
-            $data = Redis::hget($key, $openGId);
+            $data = Redis::hget($key, 'login_share_reward');
 
             if ($data >= 1) return false;
 
         } else {
 
-            Redis::hset($key, $openGId, 0);
+            Redis::set($key, 'login_share_reward', 0);
 
         }
 
@@ -417,13 +417,13 @@ class ShopBuff extends Model
      * @param string $openGId
      * @return bool
      */
-    public function incrUserDiamondNums($userId = '', $openGId = '')
+    public function incrUserDiamondNums($userId = '')
     {
-        if (!$userId || $openGId) return false;
+        if (!$userId) return false;
 
         $key = $this->_getUserDiamondCheckKey($userId);
 
-        Redis::hincrby($key, $openGId, 1);
+        Redis::hincrby($key, 'login_share_reward', 1);
 
         return true;
     }
