@@ -474,12 +474,13 @@ class ConfigController extends Controller
         return response()->json(Config::get('constants.SUCCESS'));
     }
 
+    /**
+     * 分享领取钻石，3小时一次
+     * @param Request $req
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function cycDiamond(Request $req)
     {
-
-
-
-        dd(Carbon::now()->addHour(3)->timestamp);
 
         $userId        = $req->get('userId', '');
 
@@ -520,27 +521,32 @@ class ConfigController extends Controller
 
         Log::info('解密数据4：', $dataArr);
 
-        $openGId = $dataArr['openGId'];
-
-        $key = Carbon::now()->format('Ymd') . '_DIAMOND' ;
+        //$openGId = $dataArr['openGId'];
 
         // 超出领取次数
-        if (!$this->shopModel->checkUserDiamondNums($userId, $key))
+        if (!$this->shopModel->checkUserCycDiamondNums($userId) )
         {
             return response()->json(Config::get('constants.FAILURE'));
         }
 
         $userBags = $this->userBagModel->getUserBag($userId);
 
-        Log::info('钻石不足分享领取钻石，userId: ' . $userId . ', diamond: 80');
+        Log::info('3小时分享领取钻石，userId: ' . $userId . ', diamond: 20');
 
-        $update = ['diamond' => 80 + $userBags['diamond']];
+        $update = ['diamond' => 20 + $userBags['diamond']];
 
         $this->userBagModel->setUserBag($userId, $update);
 
-        $this->shopModel->incrUserDiamondNums($userId, $key);
+        $this->shopModel->incrUserCycDiamondNums($userId);
 
-        return response()->json(Config::get('constants.SUCCESS'));
+        return response()->json(
+            array_merge(
+                array(
+                    'cdTs' => $this->shopModel->getUserCycDiamondTs($userId),
+                ),
+                Config::get('constants.SUCCESS')
+            )
+        );
     }
 
 }

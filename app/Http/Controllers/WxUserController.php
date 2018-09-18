@@ -215,6 +215,7 @@ class WxUserController extends Controller
             array_merge(
                 array(
                     'sessionId'       => $sessionId,
+                    'cdTs'            => $this->shopModel->getUserCycDiamondTs($userId),
                     'refPrice'        => $refPrice,
                     'weekGold'        => $this->userBagModel->incrUserWeekGold($userId, $offlineGold),
                     'offlineGold'     => $offlineGold,

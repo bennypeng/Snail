@@ -428,44 +428,76 @@ class ShopBuff extends Model
         return true;
     }
 
+    /**
+     * 检测用户进入分享领取钻石的状态, 3小时一次
+     * @param string $userId
+     * @return bool
+     */
     public function checkUserCycDiamondNums($userId = '')
     {
 
-        /**
-         * @todo
-         */
         if (!$userId) return false;
 
         $key = $this->_getUserCycDiamondCheckKey($userId);
 
-        if (Redis::exists($key)) {
+        if (!Redis::exists($key)) {
 
-            $data = Redis::hget($key, $type);
+            Redis::set($key, 0);
 
-            if ($data >= 1) return false;
-
-        } else {
-
-            Redis::hset($key, $type, 0);
+            Redis::expireat($key, Carbon::now()->addHour(3)->timestamp);
 
         }
+
+        $data = Redis::get($key);
+
+        $ret = $data >= 1 ? false : true;
+
+        return $ret;
+    }
+
+    /**
+     * 增加用户分享领取钻石的次数，3小时一次
+     * @param string $userId
+     * @return bool
+     */
+    public function incrUserCycDiamondNums($userId = '')
+    {
+
+        if (!$userId) return false;
+
+        $key = $this->_getUserCycDiamondCheckKey($userId);
+
+        Redis::incrby($key, 1);
 
         return true;
     }
 
-    public function incrUserCycDiamondNums($userId = '', $type = '')
+    /**
+     * 获取下一次可以分享领取钻石的时间
+     * @param string $userId
+     * @return bool|int
+     */
+    public function getUserCycDiamondTs($userId = '')
     {
 
-        /**
-         * @todo
-         */
-        if (!$userId || !$type) return false;
+        if (!$userId) return false;
 
         $key = $this->_getUserCycDiamondCheckKey($userId);
 
-        Redis::hincrby($key, $type, 1);
+        if (!Redis::exists($key))
+        {
+            Redis::set($key, 0);
 
-        return true;
+            Redis::expireat($key, Carbon::now()->addHour(3)->timestamp);
+        }
+
+        $ttl = Redis::ttl($key);
+
+        $ttl = !$ttl ? 0 : $ttl;
+
+        $ttl += Carbon::now()->timestamp;
+
+        return $ttl;
     }
 
     private function _getBuffShopKey()
