@@ -486,9 +486,7 @@ class ShopBuff extends Model
 
         if (!Redis::exists($key))
         {
-            Redis::set($key, 0);
-
-            Redis::expireat($key, Carbon::now()->addHour(3)->timestamp);
+            return time();
         }
 
         $ttl = Redis::ttl($key);

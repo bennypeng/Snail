@@ -84,7 +84,7 @@ class WxUserController extends Controller
         $this->wxUserModel->setUserSessionId($key, [
             'session_key' => $sessionKey
         ]);
-        
+
         // 判断sessionId的合法性
         if ($sessionId && $sessionId != 'undefined')
         {
