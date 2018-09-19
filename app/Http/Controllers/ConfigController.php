@@ -198,7 +198,7 @@ class ConfigController extends Controller
 
         $buffConf = $buffShopConf[$goodId - 1];
 
-        // 左下角双倍
+        // 左下角双倍(分享)
         if ($t == 2 && $goodId == 1)
         {
 
@@ -218,6 +218,25 @@ class ConfigController extends Controller
             $this->shopModel->incrUserShopShareNums($userId);
 
             Log::info('分享领buff，userId: ' . $userId . ', buffConf: ' , $buffConf);
+        } else if ($t == 3 && $goodId == 1)
+        {
+            // 左下角双倍(看视频)
+
+            // 检测今日观看视频的次数
+            $vNums = $this->snailModel->getUserSnailVedioNums($userId);
+
+            // 观看次数上限
+            if ($vNums >= 6)
+            {
+                return response()->json(Config::get('constants.MAX_VEDIO_NUM_ERROR'));
+            }
+
+            // 增加增益效果
+            $this->shopModel->setUserBuff($userId, $buffConf['buffType'], 180);
+
+            // 增加观看次数
+            $this->snailModel->incrUserSnailVedioNums($userId);
+
         } else {
 
             $userBag  = $this->userBagModel->getUserBag($userId);
