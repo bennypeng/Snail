@@ -6,6 +6,7 @@ use App\WxUser;
 use App\UserBag;
 use App\ShopBuff;
 use App\Snail;
+use Carbon\Carbon;
 use WXBizDataCrypt;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
@@ -223,6 +224,7 @@ class WxUserController extends Controller
                     'sessionId'       => $sessionId,
                     'cdTs'            => $this->shopModel->getUserCycDiamondTs($userId),
                     'refPrice'        => $refPrice,
+                    'weekKey'         => Carbon::now()->startOfWeek()->format('Ymd') . Carbon::now()->endOfWeek()->format('d'),
                     'weekGold'        => $this->userBagModel->incrUserWeekGold($userId, $offlineGold),
                     'offlineGold'     => $offlineGold,
                     'maxLevel'        => $this->snailModel->getUserSnailMaxLevel($userId),
