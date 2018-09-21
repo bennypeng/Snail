@@ -302,7 +302,7 @@ class Snail extends Model
     {
         if (!$snailData) return 0;
 
-        $price = $snailData['diamondPrice'] * pow(1.2, $userSnailBuyNums - 1);
+        $price = $snailData['diamondPrice'] * pow(1.38, $userSnailBuyNums - 1);
 
         return $price;
     }
