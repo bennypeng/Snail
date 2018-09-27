@@ -39,6 +39,13 @@ Route::get('res/{dir1}/{dir2}/{file}', function (){
 
 });
 
+// 视频id
+Route::get('vedio', function() {
+    $vedioArr = ['adunit-05bf39c30f834b2e', 'adunit-170066a5c689cf72'];
+    $idx = array_rand($vedioArr);
+    return response($vedioArr[$idx]);
+});
+
 //  测试vue页面
 //Route::group(['middleware' => ['cors']], function() {
 //    Route::get('/web', function() {
