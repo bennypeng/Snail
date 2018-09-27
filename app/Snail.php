@@ -172,11 +172,11 @@ class Snail extends Model
                     {
                         // 倒数第五个用视频购买
 
-//                        $costType = 3;
-//
-//                        $costVal  = 0;
-//
-//                        $unlockStatus = 1;
+                        $costType = 3;
+
+                        $costVal  = 0;
+
+                        $unlockStatus = 1;
 
                     } else if ($maxLevel == 24 && $v['id'] > $maxLevel - 2 && $v['id'] <= $maxLevel)
                     {
